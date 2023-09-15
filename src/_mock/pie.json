@@ -1,0 +1,33 @@
+{
+    "genderCounts": {
+      "MALE": 0,
+      "FEMALE": 20,
+      "OTHER": 0,
+      "UNKNOWN": 0
+    },
+    "bankStatusCounts": {
+      "UNKNOWN": 0,
+      "UNBANKED": 0,
+      "BANKED": 0,
+      "UNDERBANKED": 20
+    },
+    "internetAccessCounts": {
+      "UNKNOWN": 0,
+      "NO_INTERNET": 0,
+      "PHONE_INTERNET": 20,
+      "HOME_INTERNET": 0
+    },
+    "phoneOwnershipCounts": {
+      "UNKNOWN": 0,
+      "NO_PHONE": 0,
+      "FEATURE": 20,
+      "SMART": 0
+    },
+    "meta": {
+      "owner": 1,
+      "beneficiaries": 20,
+      "vendors": 1
+    },
+    "budget": 1000,
+    "token": 2000
+  }
