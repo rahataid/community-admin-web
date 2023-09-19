@@ -68,14 +68,9 @@ export const endpoints = {
     list: '/transactions',
     details: (txHash: string) => `/transactions/${txHash}`,
   },
-  administration: {
-    users: {
-      list: '/users',
-      create: '/auth/register',
-      disable: (id: number) => `/users/${id}`,
-      updateRole: (walletAddress: string) => `/users/${walletAddress}/role`,
-      approve: (walletAddress: string) => `/users/${walletAddress}/approve`,
-    },
+    communitiy: {
+      list: '/communities',
+      create: '/communities',
   },
   reports: {
     dashboard: {

@@ -7,7 +7,8 @@ type ReturnType = boolean;
 export function useActiveLink(path: string, deep = true): ReturnType {
   const pathname = usePathname();
 
-  const checkPath = path.startsWith('#');
+  console.log(path)
+  const checkPath = path.toString().startsWith('#');
 
   const currentPath = path === '/' ? '/' : `${path}/`;
 

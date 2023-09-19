@@ -34,62 +34,49 @@ import {
 //
 import { Button } from '@mui/material';
 import { RouterLink } from '@routes/components';
-import AdministrationService from '@services/administration';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
-import { useUsers } from 'src/api/administration';
-import { IUserItem, IUsersApiFilters, IUsersTableFilterValue } from 'src/types/administration';
-import UserDetails from './user-details-modal';
-import UsersTableFiltersResult from './users-table-filters-result';
-import UsersTableRow from './users-table-row';
-import UsersTableToolbar from './users-table-toolbar';
+// import { useUsers } from 'src/api/administration';
+import CommunityService from '@services/community';
+import { useCommunities } from 'src/api/community';
+import { ICommunityApiFilters, ICommunityItem } from 'src/types/community';
+import CommunityDetails from './commmunity-details-modal';
+import CommunityTableRow from './community-table-row';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', width: 200 },
-  { id: 'walletAddress', label: 'Wallet Address', width: 150 },
-  { id: 'role', label: 'Role', width: 150 },
-  { id: 'status', label: 'Status', width: 150 },
+  { id: 'address', label: 'Address', width: 150 },
+  { id: 'category', label: 'Category', width: 150 },
+  { id: 'country', label: 'Country', width: 150 },
+  { id: 'action', label: 'Actions', width: 150 },
   { id: '', width: 20 },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function UsersListView() {
+export default function CommunitiesListView() {
   const table = useTable();
   const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
 
   const { mutateAsync } = useMutation({
     mutationFn: async (walletAddress: string) => {
-      const res = await AdministrationService.approve(walletAddress);
+      const res = await CommunityService.approve(walletAddress);
       return res.data;
     },
     onError: () => {
-      enqueueSnackbar('Error Approving User', { variant: 'error' });
+      enqueueSnackbar('Error Approving Community', { variant: 'error' });
     },
     onSuccess: () => {
-      enqueueSnackbar('User Approved', { variant: 'success' });
-      queryClient.invalidateQueries(['users']);
+      enqueueSnackbar('Community Approved', { variant: 'success' });
+      queryClient.invalidateQueries(['communities']);
     },
   });
 
-  const updateRoleFunc = useMutation({
-    mutationFn: async (data: { walletAddress: string; role: string }) => {
-      const res = await AdministrationService.updateRole(data.walletAddress, data.role);
-      return res.data;
-    },
-    onError: () => {
-      enqueueSnackbar('Error Updating User Role', { variant: 'error' });
-    },
-    onSuccess: () => {
-      enqueueSnackbar('User Role Updated', { variant: 'success' });
-      queryClient.invalidateQueries(['users']);
-    },
-  });
 
-  const defaultFilters: IUsersApiFilters = useMemo(
+  const defaultFilters: ICommunityApiFilters = useMemo(
     () => ({
       internetAccess: '',
       bankStatus: '',
@@ -103,10 +90,10 @@ export default function UsersListView() {
     [table.order, table.orderBy, table.page, table.rowsPerPage]
   );
   const [filters, setFilters] = useState(defaultFilters);
-  const { users, meta } = useUsers(filters);
-  const userDetailsModal = useBoolean();
-  const [viewUser, setViewUser] = useState<IUserItem>({});
-
+  const { communities, meta } = useCommunities(filters);
+  const communityDetailsModal = useBoolean();
+  const [viewCommunity, setViewCommunity] = useState<ICommunityItem>({});
+ console.log(communities)
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
@@ -129,26 +116,26 @@ export default function UsersListView() {
 
   const canReset = !isEqual(defaultFilters, filters);
 
-  const notFound = (!users.length && canReset) || !users.length;
+  const notFound = (!communities.length && canReset) || !communities.length;
 
-  const handleFilters = useCallback(
-    (name: string, value: IUsersTableFilterValue) => {
-      table.onResetPage();
-      setFilters((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
+  // const handleFilters = useCallback(
+  //   (name: string, value: ICommunityTableFilterValue) => {
+  //     table.onResetPage();
+  //     setFilters((prevState) => ({
+  //       ...prevState,
+  //       [name]: value,
+  //     }));
 
-      const updatedParams = {
-        ...filters,
-        ...Object.fromEntries(searchParams.entries()),
-        [name]: value,
-      };
-      const queryString = createQueryString(updatedParams);
-      push(`${pathname}?${queryString}`);
-    },
-    [table, createQueryString, push, searchParams, filters, pathname]
-  );
+  //     const updatedParams = {
+  //       ...filters,
+  //       ...Object.fromEntries(searchParams.entries()),
+  //       [name]: value,
+  //     };
+  //     const queryString = createQueryString(updatedParams);
+  //     push(`${pathname}?${queryString}`);
+  //   },
+  //   [table, createQueryString, push, searchParams, filters, pathname]
+  // );
 
   const handleResetFilters = useCallback(() => {
     setFilters(defaultFilters);
@@ -156,23 +143,23 @@ export default function UsersListView() {
   }, [push, defaultFilters, pathname]);
 
   const handleViewRow = useCallback(
-    (user: IUserItem) => {
-      userDetailsModal.onTrue();
-      setViewUser(user);
+    (community: ICommunityItem) => {
+      communityDetailsModal.onTrue();
+      setViewCommunity(community);
     },
-    [userDetailsModal]
+    [communityDetailsModal]
   );
 
   const handleUserActivate = async (walletAddress: string) => {
     await mutateAsync(walletAddress);
   };
 
-  const handleUserChangeRole = async (walletAddress: string, role: string) => {
-    await updateRoleFunc.mutateAsync({ walletAddress, role });
-  };
+  // const handleUserChangeRole = async (walletAddress: string, role: string) => {
+  //   await updateRoleFunc.mutateAsync({ walletAddress, role });
+  // };
 
   useEffect(() => {
-    const searchFilters: IUsersApiFilters = {
+    const searchFilters: ICommunityApiFilters = {
       ...defaultFilters,
       ...Object.fromEntries(searchParams.entries()),
     };
@@ -181,59 +168,54 @@ export default function UsersListView() {
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-      <UserDetails
-        open={userDetailsModal.value}
-        onClose={userDetailsModal.onFalse}
-        user={viewUser}
-        onActivate={handleUserActivate}
-        onChangeRole={handleUserChangeRole}
+      <CommunityDetails
+        open={communityDetailsModal.value}
+        onClose={communityDetailsModal.onFalse}
+        community={viewCommunity}
       />
       <CustomBreadcrumbs
-        heading="Users: List"
+        heading="Community: List"
         links={[{ name: 'Dashboard', href: paths.dashboard.root }, { name: 'List' }]}
         sx={{
           mb: { xs: 3, md: 5 },
         }}
         action={
+          <>
           <Button
             component={RouterLink}
-            href={paths.dashboard.administration.users.add}
+            href={paths.dashboard.general.community.add}
             variant="outlined"
             startIcon={<Iconify icon="mingcute:add-line" />}
             color="success"
           >
-            Add Users
+            Add Community
           </Button>
+          <Button
+          component={RouterLink}
+          href={paths.dashboard.general.category.add}
+          variant="outlined"
+          startIcon={<Iconify icon="mingcute:add-line" />}
+          color="success"
+          sx={{ marginLeft: 2 }} 
+        >
+          Add Category
+        </Button>
+        </>
         }
       />
       <Card>
-        <UsersTableToolbar
-          filters={filters}
-          onFilters={handleFilters}
-          internetAccessOptions={[]}
-          bankStatusOptions={[]}
-          phoneStatusOptions={[]}
-        />
+       
 
-        {canReset && (
-          <UsersTableFiltersResult
-            filters={filters}
-            onFilters={handleFilters}
-            onResetFilters={handleResetFilters}
-            results={users.length}
-            sx={{ p: 2.5, pt: 0 }}
-          />
-        )}
-
+       
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <TableSelectedAction
             dense={table.dense}
             numSelected={table.selected.length}
-            rowCount={users.length}
+            rowCount={communities.length}
             onSelectAllRows={(checked) =>
               table.onSelectAllRows(
                 checked,
-                users.map((row: IUserItem) => row.name.toString())
+                communities.map((row: ICommunityItem) => row.name.toString())
               )
             }
             action={
@@ -251,15 +233,15 @@ export default function UsersListView() {
                 order={table.order}
                 orderBy={table.orderBy}
                 headLabel={TABLE_HEAD}
-                rowCount={users.length}
+                rowCount={communities.length}
                 numSelected={table.selected.length}
                 onSort={table.onSort}
               />
 
               <TableBody>
-                {users.map((row: IUserItem) => (
-                  <UsersTableRow
-                    key={row.walletAddress}
+                {communities.map((row: ICommunityItem) => (
+                  <CommunityTableRow
+                    key={row.id}
                     row={row}
                     onViewRow={() => handleViewRow(row)}
                   />

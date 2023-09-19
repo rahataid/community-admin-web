@@ -11,17 +11,17 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import Iconify from 'src/components/iconify';
 //
 import Label from '@components/label/label';
-import { IUserItem } from 'src/types/administration';
+import { ICommunityItem } from 'src/types/community';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: IUserItem;
+  row: ICommunityItem;
   onViewRow: VoidFunction;
 };
 
-export default function UsersTableRow({ row, onViewRow }: Props) {
-  const { name, roles, walletAddress, isApproved, status } = row;
+export default function CommunityTableRow({ row, onViewRow }: Props) {
+  const { name, address,category ,country} = row;
 
   const quickEdit = useBoolean();
 
@@ -33,18 +33,18 @@ export default function UsersTableRow({ row, onViewRow }: Props) {
 
       <TableCell sx={{ whiteSpace: 'nowrap' }}>
         {' '}
-        <Label variant="soft">{walletAddress}</Label>
+        <Label variant="soft">{address}</Label>
       </TableCell>
 
-      <TableCell>
-        <Label variant="soft">{roles}</Label>
-      </TableCell>
-      <TableCell>
-        <Label variant="soft" color={isApproved ? 'primary' : 'warning'}>
-          {status}
-        </Label>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>
+        {' '}
+        <Label variant="soft">{category?.name}</Label>
       </TableCell>
 
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>
+        {' '}
+        <Label variant="soft">{country}</Label>
+      </TableCell>
       <TableCell align="center" sx={{ px: 1, whiteSpace: 'nowrap' }}>
         <Tooltip title="View Details" placement="top" arrow>
           <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={() => onViewRow()}>

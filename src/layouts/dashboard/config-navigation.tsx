@@ -12,6 +12,8 @@ const icon = (name: string) => <Iconify icon={name} />;
 
 const ICONS = {
   dashboard: icon('material-symbols:dashboard-outline-rounded'),
+  community: icon('fluent:people-community-24-filled'),
+  category: icon('carbon:category')
 };
 
 // ----------------------------------------------------------------------
@@ -32,6 +34,18 @@ export function useNavData() {
             icon: ICONS.dashboard,
             show: true,
           },
+          {
+            title: 'Community',
+            path: paths.dashboard.general.community.list,
+            icon: ICONS.community,
+            show: true,
+          },
+          {
+            title:'Category',
+            path:paths.dashboard.general.category,
+            icon: ICONS.category,
+            show: true,
+          }
         ],
       },
 

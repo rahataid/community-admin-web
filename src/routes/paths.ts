@@ -13,7 +13,8 @@ const ROOTS = {
   PHOTO_GALLERY: '/photo-gallery',
   VENDORS: '/vendors',
   CAMPAIGNS: '/campaigns',
-  ADMINISTATION: '/administration',
+  COMMUNITIES: '/communities',
+  CATEGORY:'/category'
 };
 
 // ----------------------------------------------------------------------
@@ -69,13 +70,15 @@ export const paths = {
         edit: (id: number) => `${ROOTS.CAMPAIGNS}/${id}/edit`,
         details: (id: number) => `${ROOTS.CAMPAIGNS}/${id}`,
       },
-    },
-    administration: {
-      users: {
-        list: `${ROOTS.ADMINISTATION}/users`,
-        add: `${ROOTS.ADMINISTATION}/users/add`,
-        details: (walletAddress: string) => `${ROOTS.ADMINISTATION}/${walletAddress}`,
+    community: {
+        list: `${ROOTS.COMMUNITIES}`,
+        add: `${ROOTS.COMMUNITIES}/add`,
+        details: (walletAddress: string) => `${ROOTS.COMMUNITIES}/${walletAddress}`,
       },
-    },
+      category: {
+        list: `${ROOTS.CATEGORY}`,
+        add:`${ROOTS.CATEGORY}/add`,
+      }
   },
+},
 };

@@ -3,8 +3,8 @@
 import { useEffect } from 'react';
 // @mui
 import Fade from '@mui/material/Fade';
-import Stack from '@mui/material/Stack';
 import Portal from '@mui/material/Portal';
+import Stack from '@mui/material/Stack';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // routes
@@ -13,7 +13,7 @@ import { useActiveLink } from 'src/routes/hook/use-active-link';
 //
 import { NavItemProps } from '../types';
 import { NavItem, NavItemDashboard } from './nav-item';
-import { StyledSubheader, StyledMenu } from './styles';
+import { StyledMenu, StyledSubheader } from './styles';
 
 // ----------------------------------------------------------------------
 
