@@ -10,19 +10,17 @@ import { useBoolean } from 'src/hooks/use-boolean';
 // components
 import Iconify from 'src/components/iconify';
 //
-import Label from '@components/label/label';
-import { ICommunityItem } from 'src/types/community';
+import { ICategoryItem } from 'src/types/community';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: ICommunityItem;
+  row: ICategoryItem;
   onViewRow: VoidFunction;
-  onEdit:VoidFunction;
 };
 
-export default function CommunityTableRow({ row, onViewRow ,onEdit}: Props) {
-  const { name, address,category ,country} = row;
+export default function CategoryTableRow({ row, onViewRow }: Props) {
+  const { name} = row;
 
   const quickEdit = useBoolean();
 
@@ -32,29 +30,10 @@ export default function CommunityTableRow({ row, onViewRow ,onEdit}: Props) {
         <ListItemText primary={name} primaryTypographyProps={{ typography: 'body2' }} />
       </TableCell>
 
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>
-        {' '}
-        <Label variant="soft">{address}</Label>
-      </TableCell>
-
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>
-        {' '}
-        <Label variant="soft">{category?.name}</Label>
-      </TableCell>
-
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>
-        {' '}
-        <Label variant="soft">{country}</Label>
-      </TableCell>
       <TableCell align="center" sx={{ px: 1, whiteSpace: 'nowrap' }}>
         <Tooltip title="View Details" placement="top" arrow>
           <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={() => onViewRow()}>
             <Iconify color="#118D57" icon="iconamoon:eye-light" />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="View Details" placement="top" arrow>
-          <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={() => onEdit()}>
-            <Iconify color="#118D57" icon="ic:baseline-edit" />
           </IconButton>
         </Tooltip>
       </TableCell>

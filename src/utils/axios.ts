@@ -71,6 +71,11 @@ export const endpoints = {
     communitiy: {
       list: '/communities',
       create: '/communities',
+      updateAssets:(id:string)=>`communities/${id}/asset`
+  },
+  category:{
+    create:'/categories',
+    list:'/categories'
   },
   reports: {
     dashboard: {

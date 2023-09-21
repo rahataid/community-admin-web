@@ -1,15 +1,17 @@
 import CommunityService from "@services/community";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSnackbar } from "notistack";
 import { useMemo } from "react";
-import { ICommunityListHookReturn } from "src/types/community";
+import { IApiResponseError } from "src/types/beneficiaries";
+import { ICommunityApiFilters, ICommunityDetails, ICommunityListHookReturn, ICommunityTableFilterValue } from "src/types/community";
 
-export function useCommunities():ICommunityListHookReturn{
-        const { data, isLoading, error } = useQuery(['communities'], async () => {
-          const res = await CommunityService.list();
+export function useCommunities(params?:ICommunityApiFilters):ICommunityListHookReturn{
+        const { data, isLoading, error } = useQuery(['communities', params], async () => {
+          const res = await CommunityService.list(params);
           return res;
         });
       
-        const communities = useMemo(() => data?.data || [], [data?.data]);
+        const communities = useMemo(() => data?.data?.rows || [], [data?.data?.rows]);
         const meta = useMemo(() => data?.data?.meta || {}, [data?.data?.meta]);
       
         return {
@@ -19,3 +21,27 @@ export function useCommunities():ICommunityListHookReturn{
           error
         };
       }
+
+   export function useCreateCommunities(){
+    const queryClient = useQueryClient();
+    const { enqueueSnackbar } = useSnackbar();
+    return useMutation<
+    ICommunityDetails,
+    IApiResponseError,
+    ICommunityTableFilterValue>(
+      ['categories/create'],
+      async (data: ICommunityTableFilterValue) => {
+        const res = await CommunityService.create(data);
+        return res?.data;
+      },
+      {
+        onError: () => {
+          enqueueSnackbar('Error Creating Community', { variant: 'error' });
+        },
+        onSuccess: () => {
+          enqueueSnackbar('Community Created Successfully', { variant: 'success' });
+          queryClient.invalidateQueries(['communities']);
+        },
+      }
+    );
+   }   

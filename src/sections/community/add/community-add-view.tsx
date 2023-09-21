@@ -4,7 +4,7 @@ import CustomBreadcrumbs from '@components/custom-breadcrumbs/custom-breadcrumbs
 import { useSettingsContext } from '@components/settings';
 import { Container } from '@mui/material';
 import { paths } from '@routes/paths';
-import UserAddForm from './community-new-edit-form';
+import UserAddForm from './community-new-add-form';
 
 const UserAddView = () => {
   const settings = useSettingsContext();

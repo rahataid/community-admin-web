@@ -14,7 +14,7 @@ const ROOTS = {
   VENDORS: '/vendors',
   CAMPAIGNS: '/campaigns',
   COMMUNITIES: '/communities',
-  CATEGORY:'/category'
+  CATEGORY:'/categories'
 };
 
 // ----------------------------------------------------------------------
@@ -73,7 +73,9 @@ export const paths = {
     community: {
         list: `${ROOTS.COMMUNITIES}`,
         add: `${ROOTS.COMMUNITIES}/add`,
+        edit:(id:number)=>`${ROOTS.COMMUNITIES}/${id}/edit`,
         details: (walletAddress: string) => `${ROOTS.COMMUNITIES}/${walletAddress}`,
+
       },
       category: {
         list: `${ROOTS.CATEGORY}`,

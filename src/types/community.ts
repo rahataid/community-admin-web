@@ -1,4 +1,3 @@
-
 export type ICategoryItem = {
   id: number;
   name:string;
@@ -7,6 +6,22 @@ export type ICategoryItem = {
   deletedAt: string;
 }
 
+
+export type ICategoryList = ICategoryItem[];
+export type ICategoryApiFilter={
+  page?: number;
+  perPage?: number;
+  name?: string;
+  orderBy?: string;
+  order?: 'asc' | 'desc';
+}
+
+export type ICategoryTableFilterValue = {
+  name: string;
+}
+export type ICategoryDetails={
+  name:string
+}
 export type ICommunityItem = {
   id: number;
   address?: string;
@@ -30,26 +45,35 @@ export type ICommunityApiFilters = {
   page?: number;
   perPage?: number;
   name?: string;
-  role?: string;
-  isApproved?: boolean;
   orderBy?: string;
   order?: 'asc' | 'desc';
 };
 
 export type ICommunityTableFilterValue = {
   name: string;
-  address?: string;
+  walletAddress?: string;
   country?: string;
   category: string;
+  latitude:number;
+  longitude:number;
 }
 
 export interface ICommunityDetails{
   name: string;
-  address?: string;
+  walletAddress?: string;
   country?: string;
   category: string;
+  latitude:number;
+  longitude:number;
 }
 
+export interface IcommunityAssets{
+  id:string;
+  cover:string;
+  logo:string;
+  gallery:string[]
+
+}
 
 export type ICommunityPagination = {
   currentPage?: number;

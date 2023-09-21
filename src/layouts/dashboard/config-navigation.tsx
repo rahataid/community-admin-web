@@ -42,7 +42,7 @@ export function useNavData() {
           },
           {
             title:'Category',
-            path:paths.dashboard.general.category,
+            path:paths.dashboard.general.category.list,
             icon: ICONS.category,
             show: true,
           }

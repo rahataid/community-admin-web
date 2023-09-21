@@ -1,1 +1,1 @@
-export { default as CategoryCreateFormView } from './user-add-view';
+export { default as CategoryCreateFormView } from './cat-new-edit-form';
