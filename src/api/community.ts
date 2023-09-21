@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { useMemo } from "react";
 import { IApiResponseError } from "src/types/beneficiaries";
-import { ICommunityApiFilters, ICommunityDetails, ICommunityListHookReturn, ICommunityTableFilterValue } from "src/types/community";
+import { ICommunityApiFilters, ICommunityDetails, ICommunityListHookReturn, ICommunityTableFilterValue, IcommunityAssets } from "src/types/community";
 
 export function useCommunities(params?:ICommunityApiFilters):ICommunityListHookReturn{
         const { data, isLoading, error } = useQuery(['communities', params], async () => {
@@ -45,3 +45,24 @@ export function useCommunities(params?:ICommunityApiFilters):ICommunityListHookR
       }
     );
    }   
+
+   export function useUpdateCommunityAssets(){
+    const queryClient = useQueryClient();
+    const { enqueueSnackbar } = useSnackbar();
+    return useMutation(
+      ['community/update-assets'],
+      async ({id,data}:{id:string,data:IcommunityAssets}) => {
+        const res = await CommunityService.updateAssets(id,data);
+        return res?.data;
+      },
+      {
+        onError: () => {
+          enqueueSnackbar('Error Updating Community assets', { variant: 'error' });
+        },
+        onSuccess: () => {
+          enqueueSnackbar('Community Assets Created Successfully', { variant: 'success' });
+          queryClient.invalidateQueries(['communities']);
+        },
+      }
+    );
+   } 

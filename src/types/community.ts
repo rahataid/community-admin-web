@@ -68,7 +68,6 @@ export interface ICommunityDetails{
 }
 
 export interface IcommunityAssets{
-  id:string;
   cover:string;
   logo:string;
   gallery:string[]

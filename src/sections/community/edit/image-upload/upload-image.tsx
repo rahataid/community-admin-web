@@ -12,6 +12,7 @@ import Switch from '@mui/material/Switch';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // components
+import { Grid } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { Upload } from 'src/components/upload';
 
@@ -19,10 +20,19 @@ import { Upload } from 'src/components/upload';
 
 
 
-export default function UploadImage({onUpload}) {
+type UploadImageProps = {
+  handleCoverUpload:(file:File)=>void;
+  handleUploadMultiple:(files:File[])=>void
+}
+
+
+
+export default function UploadImage({
+  handleCoverUpload,
+  handleUploadMultiple
+}:UploadImageProps) {
   const preview = useBoolean();
   const [files, setFiles] = useState<(File | string)[]>([]);
-
   const [file, setFile] = useState<File | string | null>(null);
   const handleDropSingleFile = useCallback((acceptedFiles: File[]) => {
     const newFile = acceptedFiles[0];
@@ -57,8 +67,17 @@ export default function UploadImage({onUpload}) {
   const handleRemoveAllFiles = () => {
     setFiles([]);
   };
+
+  const onUploadMultiple =()=>{
+    handleUploadMultiple(files)
+  }
+
+  const onUploadCoverPhoto=()=>{
+    handleCoverUpload(file)
+  }
   return (
-    <>
+    <Grid sx={{ my: 5 }}>
+
       <Stack spacing={5}>
         <Card>
           <CardHeader
@@ -78,7 +97,7 @@ export default function UploadImage({onUpload}) {
               onDrop={handleDropMultiFile}
               onRemove={handleRemoveFile}
               onRemoveAll={handleRemoveAllFiles}
-              onUpload={() => console.info('ON UPLOAD')}
+              onUpload={onUploadMultiple}
             />
           </CardContent>
         </Card>
@@ -90,11 +109,11 @@ export default function UploadImage({onUpload}) {
               file={file}
               onDrop={handleDropSingleFile}
               onDelete={() => setFile(null)}
-              onUpload={onUpload}
+              onUpload={onUploadCoverPhoto}
             />
           </CardContent>
         </Card>
       </Stack>
-    </>
+   </Grid>
   );
 }

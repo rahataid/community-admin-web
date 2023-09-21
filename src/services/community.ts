@@ -6,7 +6,7 @@ const CommunityService = {
     axiosInstance.get(endpoints.communitiy.list, { params }),
   create: (data: ICommunityDetails) =>
     axiosInstance.post(endpoints.communitiy.create, { ...data }),
-    updateAssets:(data:IcommunityAssets)=> axiosInstance.patch(endpoints.communitiy.updateAssets(data.id),{...data})
+    updateAssets:(id:string,data:IcommunityAssets)=> axiosInstance.patch(endpoints.communitiy.updateAssets(id),{...data})
  };
 
 export default CommunityService;
