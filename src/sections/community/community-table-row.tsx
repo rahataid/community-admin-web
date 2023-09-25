@@ -52,7 +52,7 @@ export default function CommunityTableRow({ row, onViewRow ,onEdit}: Props) {
             <Iconify color="#118D57" icon="iconamoon:eye-light" />
           </IconButton>
         </Tooltip>
-        <Tooltip title="View Details" placement="top" arrow>
+        <Tooltip title="Edit" placement="top" arrow>
           <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={() => onEdit()}>
             <Iconify color="#118D57" icon="ic:baseline-edit" />
           </IconButton>
