@@ -58,6 +58,7 @@ const CommunityAddForm: React.FC = () => {
         handleCoverUpload={handleCoverUpload}
         isUploading={awsUploader.uploadFile.isLoading}
         error={awsUploader.uploadFile.error?.message}
+        
       />
       <CommunityEditForm />
     </>
