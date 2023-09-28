@@ -12,25 +12,25 @@ import Switch from '@mui/material/Switch';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // components
-import { Grid } from '@mui/material';
+import { Alert, Grid } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { Upload } from 'src/components/upload';
 
 // ----------------------------------------------------------------------
 
-
-
 type UploadImageProps = {
-  handleCoverUpload:(file:File)=>void;
-  handleUploadMultiple:(files:File[])=>void
-}
-
-
+  handleCoverUpload: (file: File) => void;
+  handleUploadMultiple: (files: File[]) => void;
+  error?: string;
+  isUploading: boolean;
+};
 
 export default function UploadImage({
   handleCoverUpload,
-  handleUploadMultiple
-}:UploadImageProps) {
+  handleUploadMultiple,
+  error,
+  isUploading,
+}: UploadImageProps) {
   const preview = useBoolean();
   const [files, setFiles] = useState<(File | string)[]>([]);
   const [file, setFile] = useState<File | string | null>(null);
@@ -68,16 +68,15 @@ export default function UploadImage({
     setFiles([]);
   };
 
-  const onUploadMultiple =()=>{
-    handleUploadMultiple(files)
-  }
+  const onUploadMultiple = () => {
+    handleUploadMultiple(files);
+  };
 
-  const onUploadCoverPhoto=()=>{
-    handleCoverUpload(file)
-  }
+  const onUploadCoverPhoto = () => {
+    handleCoverUpload(file);
+  };
   return (
     <Grid sx={{ my: 5 }}>
-
       <Stack spacing={5}>
         <Card>
           <CardHeader
@@ -105,15 +104,23 @@ export default function UploadImage({
         <Card>
           <CardHeader title="Upload Cover Photo" />
           <CardContent>
+            {error && (
+              <Alert severity="error" sx={{ mb: 3 }}>
+                {error}
+              </Alert>
+            )}
             <Upload
+              maxSize={15000000}
               file={file}
               onDrop={handleDropSingleFile}
               onDelete={() => setFile(null)}
               onUpload={onUploadCoverPhoto}
+              helperText="Max file size is 15MB"
+              disabled={isUploading}
             />
           </CardContent>
         </Card>
       </Stack>
-   </Grid>
+    </Grid>
   );
 }

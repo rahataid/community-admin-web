@@ -23,3 +23,21 @@ export function getLabelsByValues(array: any, values: any) {
     return result ? result?.details?.name : undefined;
   });
 }
+
+export async function fileToUint8Array(file: File): Promise<Uint8Array> {
+  return new Promise<Uint8Array>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.result instanceof ArrayBuffer) {
+        const buffer = new Uint8Array(reader.result);
+        resolve(buffer);
+      } else {
+        reject(new Error('Failed to read file as ArrayBuffer'));
+      }
+    };
+    reader.onerror = () => {
+      reject(reader.error);
+    };
+    reader.readAsArrayBuffer(file);
+  });
+}

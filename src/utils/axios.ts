@@ -68,14 +68,16 @@ export const endpoints = {
     list: '/transactions',
     details: (txHash: string) => `/transactions/${txHash}`,
   },
-    communitiy: {
-      list: '/communities',
-      create: '/communities',
-      updateAssets:(id:string)=>`communities/${id}/asset`
+  communitiy: {
+    list: '/communities',
+    details: (address: string) => `/communities/${address}`,
+    create: '/communities',
+    updateAssets: (id: string) => `communities/${id}/asset`,
+    uploadAssets: (id: string) => `/communities/${id}/upload-asset`,
   },
-  category:{
-    create:'/categories',
-    list:'/categories'
+  category: {
+    create: '/categories',
+    list: '/categories',
   },
   reports: {
     dashboard: {

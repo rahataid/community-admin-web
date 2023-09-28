@@ -18,11 +18,11 @@ import { ICommunityItem } from 'src/types/community';
 type Props = {
   row: ICommunityItem;
   onViewRow: VoidFunction;
-  onEdit:VoidFunction;
+  onEdit: VoidFunction;
 };
 
-export default function CommunityTableRow({ row, onViewRow ,onEdit}: Props) {
-  const { name, address,category ,country} = row;
+export default function CommunityTableRow({ row, onViewRow, onEdit }: Props) {
+  const { name, address, category, country } = row;
 
   const quickEdit = useBoolean();
 
@@ -49,12 +49,12 @@ export default function CommunityTableRow({ row, onViewRow ,onEdit}: Props) {
       <TableCell align="center" sx={{ px: 1, whiteSpace: 'nowrap' }}>
         <Tooltip title="View Details" placement="top" arrow>
           <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={() => onViewRow()}>
-            <Iconify color="#118D57" icon="iconamoon:eye-light" />
+            <Iconify color="#118D57" icon="solar:eye-linear" />
           </IconButton>
         </Tooltip>
-        <Tooltip title="View Details" placement="top" arrow>
+        <Tooltip title="Edit" placement="top" arrow>
           <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={() => onEdit()}>
-            <Iconify color="#118D57" icon="ic:baseline-edit" />
+            <Iconify color="#118D57" icon="iconamoon:edit-light" />
           </IconButton>
         </Tooltip>
       </TableCell>

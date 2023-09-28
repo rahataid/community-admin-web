@@ -97,7 +97,6 @@ export default function Upload({
       )}
 
       <Stack direction="row" justifyContent="flex-end" spacing={1.5} sx={{ my: 3 }}>
-
         {onUpload && (
           <Button
             size="small"
@@ -129,6 +128,7 @@ export default function Upload({
             size="small"
             variant="contained"
             onClick={onUpload}
+            disabled={disabled}
             startIcon={<Iconify icon="eva:cloud-upload-fill" />}
           >
             Upload

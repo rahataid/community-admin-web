@@ -1,5 +1,4 @@
 // utils
-import { paramCase } from 'src/utils/change-case';
 
 // ----------------------------------------------------------------------
 
@@ -14,7 +13,7 @@ const ROOTS = {
   VENDORS: '/vendors',
   CAMPAIGNS: '/campaigns',
   COMMUNITIES: '/communities',
-  CATEGORY:'/categories'
+  CATEGORY: '/categories',
 };
 
 // ----------------------------------------------------------------------
@@ -35,52 +34,17 @@ export const paths = {
 
     general: {
       app: `${ROOTS.DASHBOARD}/app`,
-      projects: {
-        list: `${ROOTS.PROJECTS}`,
-        add: `${ROOTS.PROJECTS}/add`,
-        details: (contractAddress: string) => `${ROOTS.PROJECTS}/${contractAddress}`,
-        edit: (contractAddress: string) => `${ROOTS.PROJECTS}/${contractAddress}/edit`,
-        beneficiaries: (contractAddress: string) =>
-          `${ROOTS.PROJECTS}/${contractAddress}/beneficiaries`,
-        vendors: (contractAddress: string) => `${ROOTS.PROJECTS}/${contractAddress}/vendors`,
-        campaigns: (contractAddress: string) => `${ROOTS.PROJECTS}/${contractAddress}/campaigns`,
-        campaignsadd: (contractAddress: string) =>
-          `${ROOTS.PROJECTS}/${contractAddress}/campaigns/add`,
-      },
-      photoGallery: `${ROOTS.PHOTO_GALLERY}`,
-      vendors: {
-        list: `${ROOTS.VENDORS}`,
-        details: (address: string) => `${ROOTS.VENDORS}/${address}`,
-        edit: (address: string) => `${ROOTS.VENDORS}/${paramCase(address)}/edit`,
-      },
 
-      transactions: {
-        list: `${ROOTS.TRANSACTIONS}`,
-        details: (txHash: string) => `${ROOTS.TRANSACTIONS}/${paramCase(txHash)}`,
-      },
-      beneficiaries: {
-        list: `${ROOTS.BENEFICIARIES}`,
-        details: (address: string) => `${ROOTS.BENEFICIARIES}/${paramCase(address)}`,
-        edit: (address: string) => `${ROOTS.BENEFICIARIES}/${paramCase(address)}/edit`,
-        add: `${ROOTS.BENEFICIARIES}/add`,
-      },
-      campaigns: {
-        list: `${ROOTS.CAMPAIGNS}`,
-        add: `${ROOTS.CAMPAIGNS}/add`,
-        edit: (id: number) => `${ROOTS.CAMPAIGNS}/${id}/edit`,
-        details: (id: number) => `${ROOTS.CAMPAIGNS}/${id}`,
-      },
-    community: {
+      community: {
         list: `${ROOTS.COMMUNITIES}`,
         add: `${ROOTS.COMMUNITIES}/add`,
-        edit:(id:number)=>`${ROOTS.COMMUNITIES}/${id}/edit`,
+        edit: (address: string) => `${ROOTS.COMMUNITIES}/${address}/edit`,
         details: (walletAddress: string) => `${ROOTS.COMMUNITIES}/${walletAddress}`,
-
       },
       category: {
         list: `${ROOTS.CATEGORY}`,
-        add:`${ROOTS.CATEGORY}/add`,
-      }
+        add: `${ROOTS.CATEGORY}/add`,
+      },
+    },
   },
-},
 };

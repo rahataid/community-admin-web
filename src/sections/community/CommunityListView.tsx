@@ -75,7 +75,6 @@ export default function CommunitiesListView() {
     },
   });
 
-
   const defaultFilters: ICommunityApiFilters = useMemo(
     () => ({
       internetAccess: '',
@@ -142,7 +141,7 @@ export default function CommunitiesListView() {
   }, [push, defaultFilters, pathname]);
 
   const handleViewRow = useCallback(
-    (community: ICommunityItem) => {
+    (address: string) => {
       communityDetailsModal.onTrue();
       setViewCommunity(community);
     },
@@ -150,18 +149,11 @@ export default function CommunitiesListView() {
   );
 
   const handleEditRow = useCallback(
-    (community: ICommunityItem) => {
-      push(paths.dashboard.general.community.edit(community.id))
+    (address: string) => {
+      push(paths.dashboard.general.community.edit(address));
     },
-    []
+    [push]
   );
-  const handleUserActivate = async (walletAddress: string) => {
-    await mutateAsync(walletAddress);
-  };
-
-  // const handleUserChangeRole = async (walletAddress: string, role: string) => {
-  //   await updateRoleFunc.mutateAsync({ walletAddress, role });
-  // };
 
   useEffect(() => {
     const searchFilters: ICommunityApiFilters = {
@@ -186,32 +178,29 @@ export default function CommunitiesListView() {
         }}
         action={
           <>
-          <Button
-            component={RouterLink}
-            href={paths.dashboard.general.community.add}
-            variant="outlined"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-            color="success"
-          >
-            Add Community
-          </Button>
-          <Button
-          component={RouterLink}
-          href={paths.dashboard.general.category.add}
-          variant="outlined"
-          startIcon={<Iconify icon="mingcute:add-line" />}
-          color="success"
-          sx={{ marginLeft: 2 }} 
-        >
-          Add Category
-        </Button>
-        </>
+            <Button
+              component={RouterLink}
+              href={paths.dashboard.general.community.add}
+              variant="outlined"
+              startIcon={<Iconify icon="mingcute:add-line" />}
+              color="success"
+            >
+              Add Community
+            </Button>
+            <Button
+              component={RouterLink}
+              href={paths.dashboard.general.category.add}
+              variant="outlined"
+              startIcon={<Iconify icon="mingcute:add-line" />}
+              color="success"
+              sx={{ marginLeft: 2 }}
+            >
+              Add Category
+            </Button>
+          </>
         }
       />
       <Card>
-       
-
-       
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <TableSelectedAction
             dense={table.dense}
@@ -248,8 +237,8 @@ export default function CommunitiesListView() {
                   <CommunityTableRow
                     key={row.id}
                     row={row}
-                    onViewRow={() => handleViewRow(row)}
-                    onEdit= {()=>handleEditRow(row)}
+                    onViewRow={() => handleViewRow(row?.address)}
+                    onEdit={() => handleEditRow(row?.address)}
                   />
                 ))}
 
