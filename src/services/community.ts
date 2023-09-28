@@ -14,8 +14,8 @@ const CommunityService = {
   detail: (address: string) => axiosInstance.post(endpoints.communitiy.details(address)),
   updateAssets: (id: string, data: IcommunityAssets) =>
     axiosInstance.patch(endpoints.communitiy.updateAssets(id), { ...data }),
-  uploadAssets: (id: string, data: UploadAssetParams) =>
-    axiosInstance.post(endpoints.communitiy.uploadAssets(id), { ...data }),
+  uploadAssets: (id: string, data: any) =>
+    axiosInstance.post(endpoints.communitiy.uploadAssets(id), data),
 };
 
 export default CommunityService;

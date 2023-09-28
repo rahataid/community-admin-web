@@ -8,7 +8,6 @@ import {
   ICommunityDetails,
   ICommunityListHookReturn,
   ICommunityTableFilterValue,
-  IcommunityAssets,
 } from 'src/types/community';
 
 export function useCommunities(params?: ICommunityApiFilters): ICommunityListHookReturn {
@@ -68,8 +67,8 @@ export function useUpdateCommunityAssets() {
   const { enqueueSnackbar } = useSnackbar();
   return useMutation(
     ['community/update-assets'],
-    async ({ id, data }: { id: string; data: IcommunityAssets }) => {
-      const res = await CommunityService.updateAssets(id, data);
+    async ({ address, data }: { address: string; data: any }) => {
+      const res = await CommunityService.updateAssets(address, data);
       return res?.data;
     },
     {

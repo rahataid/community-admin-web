@@ -27,22 +27,14 @@ const CommunityAddForm: React.FC = () => {
   };
 
   const handleCoverUpload = async (file: File) => {
-    const reader = new FileReader();
-    reader.readAsArrayBuffer(file);
-    reader.onload = async () => {
-      console.log(reader.result);
-      const buffer = Buffer.from(reader.result, 'utf-8');
-      await awsUploader.uploadFile.mutateAsync({
-        id: address,
-        data: {
-          file: buffer,
-          fileName: file.name,
-          mimeType: file.type,
-          folderName: 'development',
-          // folderName: community?.name,
-        },
-      });
-    };
+    const formData = new FormData();
+
+    formData.append('file', file);
+    const result = await awsUploader.uploadFile.mutateAsync({
+      walletAddress: address,
+      data: formData,
+    });
+    console.log(result);
   };
 
   console.log(awsUploader.uploadFile);
