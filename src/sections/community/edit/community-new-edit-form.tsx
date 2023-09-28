@@ -22,8 +22,20 @@ const CommunityAddForm: React.FC = () => {
 
   const awsUploader = useAWSUploader();
 
-  const handleMultipleAssetUpload = (files: File[]) => {
-    console.log(files);
+  const handleMultipleAssetUpload = async (files: File[]) => {   
+   
+  const formData = new FormData();
+  for (const file of files){
+    
+    formData.append('file', file);
+  }
+  const result = await awsUploader.uploadMultipleFile.mutateAsync({
+    key:'gallery',
+    walletAddress: address,
+    data: formData,
+  });
+  console.log(result);
+
   };
 
   const handleCoverUpload = async (file: File) => {
@@ -31,13 +43,14 @@ const CommunityAddForm: React.FC = () => {
 
     formData.append('file', file);
     const result = await awsUploader.uploadFile.mutateAsync({
+      key:'cover',
       walletAddress: address,
       data: formData,
     });
     console.log(result);
   };
 
-  console.log(awsUploader.uploadFile);
+  // console.log(awsUploader.uploadFile);
   return (
     <>
       <UploadImage

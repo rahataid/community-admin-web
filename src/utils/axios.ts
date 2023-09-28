@@ -72,8 +72,8 @@ export const endpoints = {
     list: '/communities',
     details: (address: string) => `/communities/${address}`,
     create: '/communities',
-    updateAssets: (id: string) => `communities/${id}/asset`,
-    uploadAssets: (id: string) => `/communities/${id}/upload-asset`,
+    updateMultipleAssets: (id: string,key:string) => `communities/${id}/upload-asset/${key}/multiple`,
+    uploadAssets: (id: string,key:string) => `/communities/${id}/upload-asset/${key}`,
   },
   category: {
     create: '/categories',
