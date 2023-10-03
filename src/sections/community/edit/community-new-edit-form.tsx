@@ -25,6 +25,7 @@ const CommunityAddForm: React.FC = () => {
   const handleMultipleAssetUpload = async (files: File[]) => {   
    
   const formData = new FormData();
+  // eslint-disable-next-line no-restricted-syntax
   for (const file of files){
     
     formData.append('file', file);
