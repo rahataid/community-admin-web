@@ -8,15 +8,18 @@ import { memo } from 'react';
 // assets
 // components
 
+import { Stack } from '@mui/material';
 import { useParams } from 'next/navigation';
 import { useAWSUploader } from 'src/api/asset-uploader';
-import { useUpdateCommunityAssets } from 'src/api/community';
+import { useCommunity, useUpdateCommunityAssets } from 'src/api/community';
+import { number } from 'yup';
 import CommunityEditForm from './community-edit-form';
 import UploadImage from './image-upload/upload-image';
 
 const CommunityAddForm: React.FC = () => {
   const { address } = useParams();
-  // const { community } = useCommunity(address);
+  const { community } = useCommunity(address);
+
 
   const updateCommunityAssets = useUpdateCommunityAssets();
 
@@ -25,6 +28,7 @@ const CommunityAddForm: React.FC = () => {
   const handleMultipleAssetUpload = async (files: File[]) => {   
    
   const formData = new FormData();
+  // eslint-disable-next-line no-restricted-syntax
   for (const file of files){
     
     formData.append('file', file);
@@ -50,18 +54,33 @@ const CommunityAddForm: React.FC = () => {
     console.log(result);
   };
 
-  // console.log(awsUploader.uploadFile);
+
   return (
-    <>
+
+     <Stack>
+        <h3 style={{textAlign:'center'}}>Community: {community?.name}</h3>
+    
       <UploadImage
         handleUploadMultiple={handleMultipleAssetUpload}
         handleCoverUpload={handleCoverUpload}
         isUploading={awsUploader.uploadFile.isLoading}
         error={awsUploader.uploadFile.error?.message}
-        
+        community={community}
       />
-      <CommunityEditForm />
-    </>
+      <CommunityEditForm community={community} currentCommunity={{
+        name: '',
+        country: '',
+        category: '',
+        latitude: 0,
+        longitude: 0,
+        undRaisedUsd: 0,
+        fundRaisedLocal: '',
+        localCurrency: '',
+        description: '',
+        categoryId: number,
+      }} />
+     </Stack>
+
   );
 };
 

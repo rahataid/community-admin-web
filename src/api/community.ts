@@ -82,3 +82,15 @@ export function useUpdateCommunityAssets() {
     }
   );
 }
+export function useGetMultipleImageAssets(params:string){
+  const { data, isLoading, error } = useQuery(['communities/images', params], async () => {
+    const res = await CommunityService.getMultipleAsset(params);
+    return res;
+  });
+  const image = useMemo(() => data?.data?.multiple || [], [data?.data?.multiple]);
+  const name = useMemo(() => data?.data?.name || '', (data?.data?.name));
+  return {
+image,
+name
+  }
+}

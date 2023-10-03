@@ -56,6 +56,11 @@ export type ICommunityTableFilterValue = {
   category: string;
   latitude:number;
   longitude:number;
+  undRaisedUsd:number;
+  fundRaisedLocal:string;
+  localCurrency:string;
+  description:string;
+  categoryId:number
 }
 
 export interface ICommunityDetails{

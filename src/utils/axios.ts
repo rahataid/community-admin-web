@@ -76,6 +76,7 @@ export const endpoints = {
     updateMultipleAssets: (id: string, key: string) =>
       `communities/${id}/upload-asset/${key}/multiple`,
     uploadAssets: (id: string, key: string) => `/communities/${id}/upload-asset/${key}`,
+    getMultipleAsset:(address:string)=>`/communities/${address}/images`
   },
   category: {
     create: '/categories',
