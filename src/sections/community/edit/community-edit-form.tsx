@@ -25,16 +25,26 @@ import { useParams, useRouter } from 'src/routes/hook';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Alert, AlertTitle, Box, Card, MenuItem } from '@mui/material';
 import { useCategory } from 'src/api/category';
-import { useCommunity, useCreateCommunities } from 'src/api/community';
+import { useCreateCommunities } from 'src/api/community';
 import FormProvider, { RHFSelect, RHFTextField } from 'src/components/hook-form';
 import { useSnackbar } from 'src/components/snackbar';
 import { ICommunityTableFilterValue } from 'src/types/community';
 interface FormValues extends ICommunityTableFilterValue {}
 type Props = {
+  name: string;
+  country: string;
+  category: string;
+  latitude: number;
+  longitude: number;
+  undRaisedUsd: number;
+  fundRaisedLocal: string;
+  localCurrency: string;
+  description: string;
+  categoryId: typeof Yup.number;
   currentCommunity?: ICommunityTableFilterValue;
 };
 
-const CommunityEditForm = ({ currentCommunity }: Props) => {
+const CommunityEditForm = ({currentCommunity,community}:{currentCommunity:Props,community:any}) => {
   const { push } = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const { address } = useParams();
@@ -50,7 +60,7 @@ const CommunityEditForm = ({ currentCommunity }: Props) => {
   // }, []);
   const { error, isLoading, mutate } = useCreateCommunities();
   const { categories } = useCategory();
-  const { community } = useCommunity(address);
+  // const { community } = useCommunity(address);
   const NewCommunitySchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     walletAddress: Yup.string().nullable().optional().required('WalletAddress is required'),
