@@ -9,8 +9,7 @@ const token = getToken();
 
 export const axiosInstance = axios.create({
   // TODO:BASE URl
-  // baseURL: 'https://community-api-stage.rahat.io',
-  baseURL:HOST_API,
+  baseURL: HOST_API,
   headers: { Authorization: `Bearer ${token}` },
 });
 
