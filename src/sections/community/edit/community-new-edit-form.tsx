@@ -49,8 +49,6 @@ const CommunityAddForm: React.FC = () => {
     });
     console.log(result);
   };
-
-  // console.log(awsUploader.uploadFile);
   return (
     <>
       <UploadImage
@@ -58,7 +56,6 @@ const CommunityAddForm: React.FC = () => {
         handleCoverUpload={handleCoverUpload}
         isUploading={awsUploader.uploadFile.isLoading}
         error={awsUploader.uploadFile.error?.message}
-        
       />
       <CommunityEditForm />
     </>

@@ -10,7 +10,7 @@
 'use client';
 
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 // @mui
@@ -18,18 +18,15 @@ import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 // utils
 // routes
-import { useRouter } from 'src/routes/hook';
+import { useParams, useRouter } from 'src/routes/hook';
 // types
 // assets
 // components
-import Iconify from '@components/iconify/iconify';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Alert, AlertTitle, Box, Button, Card, MenuItem, Tooltip } from '@mui/material';
-import { generateWalletAddress } from '@web3/utils';
-import axios from 'axios';
+import { Alert, AlertTitle, Box, Card, MenuItem } from '@mui/material';
 import { useCategory } from 'src/api/category';
-import { useCreateCommunities } from 'src/api/community';
-import FormProvider, { RHFMultiSelect, RHFSelect, RHFTextField } from 'src/components/hook-form';
+import { useCommunity, useCreateCommunities } from 'src/api/community';
+import FormProvider, { RHFSelect, RHFTextField } from 'src/components/hook-form';
 import { useSnackbar } from 'src/components/snackbar';
 import { ICommunityTableFilterValue } from 'src/types/community';
 interface FormValues extends ICommunityTableFilterValue {}
@@ -37,43 +34,49 @@ type Props = {
   currentCommunity?: ICommunityTableFilterValue;
 };
 
-const CommunityEditForm = ({ currentCommunity }: Props)=>{
-
-
+const CommunityEditForm = ({ currentCommunity }: Props) => {
   const { push } = useRouter();
   const { enqueueSnackbar } = useSnackbar();
-  const [countries, setCountries] = useState<any>([]);
-  const [selectedValue, setSelectedValue] = useState<any>([]);
-
-  useEffect(() => {
-    // Fetch countries from the REST Countries API
-    axios.get('https://restcountries.com/v2/all').then((response) => {
-      const countryOptions = response.data.map((country: any) => ({
-        value: country.name,
-        label: country.name,
-      }));
-      setCountries(countryOptions);
-    });
-  }, []);
+  const { address } = useParams();
+  // useEffect(() => {
+  //   // Fetch countries from the REST Countries API
+  //   axios.get('https://restcountries.com/v2/all').then((response) => {
+  //     const countryOptions = response.data.map((country: any) => ({
+  //       value: country.name,
+  //       label: country.name,
+  //     }));
+  //     setCountries(countryOptions);
+  //   });
+  // }, []);
   const { error, isLoading, mutate } = useCreateCommunities();
   const { categories } = useCategory();
-
+  const { community } = useCommunity(address);
   const NewCommunitySchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     walletAddress: Yup.string().nullable().optional().required('WalletAddress is required'),
     country: Yup.string().optional(),
     latitude: Yup.number().optional(),
     longitude: Yup.number().optional(),
+    undRaisedUsd: Yup.number().optional(),
+    fundRaisedLocal: Yup.string().optional(),
+    localCurrency: Yup.string().optional(),
+    category: Yup.string().optional(),
+    description: Yup.string().optional(),
+    categoryId: Yup.number().optional()
   });
 
   const defaultValues = useMemo<FormValues>(
     () => ({
       name: currentCommunity?.name || '',
-      walletAddress: currentCommunity?.walletAddress || '',
       country: currentCommunity?.country || '',
       category: currentCommunity?.category || '',
       latitude: currentCommunity?.latitude,
       longitude: currentCommunity?.longitude,
+      undRaisedUsd: currentCommunity?.undRaisedUsd,
+      fundRaisedLocal: currentCommunity?.fundRaisedLocal || '',
+      localCurrency: currentCommunity?.localCurrency || '',
+      description: currentCommunity?.description || '',
+      categoryId: currentCommunity?.categoryId || Yup.number
     }),
     [currentCommunity]
   );
@@ -84,117 +87,86 @@ const CommunityEditForm = ({ currentCommunity }: Props)=>{
   });
 
   const { reset, handleSubmit, setValue, trigger } = methods;
+  useEffect(() => {
+    if (community) {
+      const defaultValuesKeys = Object.keys(defaultValues) as (keyof FormValues)[];
+      const communityKeys = Object.keys(community) as (keyof FormValues)[];
 
-  const handleChange = (event: any) => {
-    const { value, label } = event.target;
-    setSelectedValue(value);
-    setValue('country', value);
-  };
+      const keysToSet = defaultValuesKeys.filter((key) => communityKeys.includes(key));
 
-  const handleGenerateWalletAddress = useCallback(() => {
-    const { address } = generateWalletAddress();
-    setValue('walletAddress', address);
-    trigger('walletAddress');
-  }, [setValue, trigger]);
+      keysToSet.forEach((key) => {
+        const value = community[key];
+        const formKey = key as keyof FormValues;
+        setValue(formKey, value as string);
+      });
+    }
+  }, [defaultValues, community, setValue]);
+
+  useEffect(() => {
+    if (community) {
+      setValue('category', community?.category?.name);
+    }
+  }, [defaultValues, community, setValue]);
 
   const onSubmit = useCallback(
     (data: ICommunityTableFilterValue) => console.log(data),
 
     // mutate(data)
-    [mutate]
+    []
   );
 
+  return (
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      {error && (
+        <Alert severity="error">
+          <AlertTitle>Error Creating Community</AlertTitle>
+          {error?.message}
+        </Alert>
+      )}
+      <Grid container spacing={3}>
+        <Grid xs={12} md={12}>
+          <Stack spacing={5}>
+            <Card sx={{ p: 3 }}>
+              <Box
+                rowGap={3}
+                columnGap={3}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                  lg: 'repeat(3, 1fr)',
+                }}
+              >
+                <RHFTextField name="name" label="Name" />
 
+                <RHFSelect name="category" label="Category">
+                  {categories.map((category) => (
+                    <MenuItem key={category.id} value={category.id}>
+                      {category.name}
+                    </MenuItem>
+                  ))}
+                </RHFSelect>
+                <RHFTextField name="country" label="Country" />
 
-    return  <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-    {error && (
-      <Alert severity="error">
-        <AlertTitle>Error Creating Community</AlertTitle>
-        {error?.message}
-      </Alert>
-    )}
-    <Grid container spacing={3}>
-      <Grid xs={12} md={12}>
-        <Stack spacing={5}>
-          <Card sx={{ p: 3 }}>
-          <Box
-            rowGap={3}
-            columnGap={3}
-            display="grid"
-            gridTemplateColumns={{
-              xs: 'repeat(1, 1fr)',
-              sm: 'repeat(2, 1fr)',
-              lg: 'repeat(3, 1fr)',
-            }}
-          >
-            <RHFTextField name="name" label="Name" />
+                <RHFTextField name="latitude" label="Latitude" InputLabelProps={{ shrink: true }} />
+                <RHFTextField
+                  name="longitude"
+                  label="Longitude"
+                  InputLabelProps={{ shrink: true }}
+                />
+                <RHFTextField name="description" label="Description" />
+              </Box>
 
-            <RHFTextField
-              name="walletAddress"
-              label="Wallet Address"
-              InputProps={{
-                endAdornment: (
-                  <Tooltip title="Generate Wallet Address" sx={{ margin: '0 !important' }}>
-                    <Button
-                      sx={{
-                        padding: 0,
-                        margin: 0,
-                        minWidth: '40px !important',
-                        width: '40px !important',
-                        height: '40px !important',
-                        borderRadius: '50%',
-                        marginRight: '-12px !important',
-                      }}
-                      startIcon={
-                        <Iconify
-                          sx={{
-                            width: 24,
-                            height: 24,
-                            margin: '0px !important',
-                            marginRight: '-12px !important',
-                          }}
-                          icon="ph:wallet-duotone"
-                          onClick={handleGenerateWalletAddress}
-                        />
-                      }
-                    />
-                  </Tooltip>
-                ),
-              }}
-              sx={{ padding: '0 !important' }}
-            />
-
-            <RHFSelect name="category" label="Category">
-              {categories.map((category) => (
-                <MenuItem key={category.id} value={category.id}>
-                  {category.name}
-                </MenuItem>
-              ))}
-            </RHFSelect>
-
-            <RHFMultiSelect //Single Select
-              name="country"
-              options={countries}
-              placeholder="Select country"
-              value={selectedValue}
-              onChange={handleChange}
-              chip={false}
-              checkbox={false}
-            />
-
-            <RHFTextField name="latitude" label="latitude" />
-            <RHFTextField name="longitude" label="longitude" />
-          </Box>
-
-          <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-            <LoadingButton type="submit" variant="outlined" color="success" loading={isLoading}>
-              Update Community
-            </LoadingButton>
+              <Stack alignItems="flex-end" sx={{ mt: 3 }}>
+                <LoadingButton type="submit" variant="outlined" color="success" loading={isLoading}>
+                  Update Community
+                </LoadingButton>
+              </Stack>
+            </Card>
           </Stack>
-        </Card>
-        </Stack>
+        </Grid>
       </Grid>
-    </Grid>
-  </FormProvider>
-}
-export default  CommunityEditForm
+    </FormProvider>
+  );
+};
+export default CommunityEditForm;

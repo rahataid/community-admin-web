@@ -9,8 +9,6 @@ import MainLayout from 'src/layouts/main';
 // components
 import ScrollProgress from 'src/components/scroll-progress';
 //
-import HomeHero from '../home-hero';
-import HomeMinimal from '../home-minimal';
 
 // ----------------------------------------------------------------------
 
@@ -47,7 +45,7 @@ export default function HomeView() {
     <MainLayout>
       <ScrollProgress scrollYProgress={scrollYProgress} />
 
-      <HomeHero />
+      {/* <HomeHero /> */}
 
       <Box
         sx={{
@@ -56,7 +54,7 @@ export default function HomeView() {
           bgcolor: 'background.default',
         }}
       >
-        <HomeMinimal />
+        
       </Box>
     </MainLayout>
   );
