@@ -9,7 +9,6 @@
 
 'use client';
 
-import { yupResolver } from '@hookform/resolvers/yup';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
@@ -18,77 +17,52 @@ import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 // utils
 // routes
-import { useParams, useRouter } from 'src/routes/hook';
+import { useParams } from 'src/routes/hook';
 // types
 // assets
 // components
+import { yupResolver } from '@hookform/resolvers/yup';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Alert, AlertTitle, Box, Card, MenuItem } from '@mui/material';
+import { Box, Card, MenuItem } from '@mui/material';
 import { useCategory } from 'src/api/category';
-import { useCreateCommunities } from 'src/api/community';
+import { useEditCommunity } from 'src/api/community';
 import FormProvider, { RHFSelect, RHFTextField } from 'src/components/hook-form';
-import { useSnackbar } from 'src/components/snackbar';
 import { ICommunityTableFilterValue } from 'src/types/community';
-interface FormValues extends ICommunityTableFilterValue {}
-type Props = {
-  name: string;
-  country: string;
-  category: string;
-  latitude: number;
-  longitude: number;
-  undRaisedUsd: number;
-  fundRaisedLocal: string;
-  localCurrency: string;
-  description: string;
-  categoryId: typeof Yup.number;
-  currentCommunity?: ICommunityTableFilterValue;
-};
 
-const CommunityEditForm = ({currentCommunity,community}:{currentCommunity:Props,community:any}) => {
-  const { push } = useRouter();
-  const { enqueueSnackbar } = useSnackbar();
+interface FormValues extends ICommunityTableFilterValue {}
+
+
+const CommunityEditForm = ({ community }: { community: any }) => {
   const { address } = useParams();
-  // useEffect(() => {
-  //   // Fetch countries from the REST Countries API
-  //   axios.get('https://restcountries.com/v2/all').then((response) => {
-  //     const countryOptions = response.data.map((country: any) => ({
-  //       value: country.name,
-  //       label: country.name,
-  //     }));
-  //     setCountries(countryOptions);
-  //   });
-  // }, []);
-  const { error, isLoading, mutate } = useCreateCommunities();
+
+  const { error, isLoading, mutate } = useEditCommunity(address);
   const { categories } = useCategory();
   // const { community } = useCommunity(address);
   const NewCommunitySchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
-    walletAddress: Yup.string().nullable().optional().required('WalletAddress is required'),
-    country: Yup.string().optional(),
-    latitude: Yup.number().optional(),
-    longitude: Yup.number().optional(),
-    undRaisedUsd: Yup.number().optional(),
-    fundRaisedLocal: Yup.string().optional(),
-    localCurrency: Yup.string().optional(),
-    category: Yup.string().optional(),
-    description: Yup.string().optional(),
-    categoryId: Yup.number().optional()
+    country: Yup.string(),
+    latitude: Yup.number(),
+    longitude: Yup.number(),
+    fundRaisedUsd: Yup.number(),
+    fundRaisedLocal: Yup.string(),
+    localCurrency: Yup.string(),
+    category: Yup.string(),
+    description: Yup.string(),
   });
 
   const defaultValues = useMemo<FormValues>(
     () => ({
-      name: currentCommunity?.name || '',
-      country: currentCommunity?.country || '',
-      category: currentCommunity?.category || '',
-      latitude: currentCommunity?.latitude,
-      longitude: currentCommunity?.longitude,
-      undRaisedUsd: currentCommunity?.undRaisedUsd,
-      fundRaisedLocal: currentCommunity?.fundRaisedLocal || '',
-      localCurrency: currentCommunity?.localCurrency || '',
-      description: currentCommunity?.description || '',
-      categoryId: currentCommunity?.categoryId || Yup.number
+      name: '',
+      country: '',
+      categoryId: '',
+      latitude: 0,
+      longitude: 0,
+      fundRaisedUsd: 0,
+      fundRaisedLocal: '',
+      localCurrency: '',
+      description: '',
     }),
-    [currentCommunity]
+    []
   );
 
   const methods = useForm<FormValues>({
@@ -114,25 +88,23 @@ const CommunityEditForm = ({currentCommunity,community}:{currentCommunity:Props,
 
   useEffect(() => {
     if (community) {
-      setValue('category', community?.category?.name);
+      setValue('categoryId', community?.category?.id);
     }
   }, [defaultValues, community, setValue]);
 
+  // const onSubmit = useCallback(
+  //   (data: ICommunityTableFilterValue) => console.log(data),
+  //   [mutate]
+  // );
   const onSubmit = useCallback(
-    (data: ICommunityTableFilterValue) => console.log(data),
-
-    // mutate(data)
-    []
+    (data) => {
+      mutate(data);
+    },
+    [mutate]
   );
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      {error && (
-        <Alert severity="error">
-          <AlertTitle>Error Creating Community</AlertTitle>
-          {error?.message}
-        </Alert>
-      )}
       <Grid container spacing={3}>
         <Grid xs={12} md={12}>
           <Stack spacing={5}>
@@ -149,13 +121,16 @@ const CommunityEditForm = ({currentCommunity,community}:{currentCommunity:Props,
               >
                 <RHFTextField name="name" label="Name" />
 
-                <RHFSelect name="category" label="Category">
+                <RHFSelect name="categoryId" label="Category">
                   {categories.map((category) => (
                     <MenuItem key={category.id} value={category.id}>
                       {category.name}
                     </MenuItem>
                   ))}
                 </RHFSelect>
+                <RHFTextField name="fundRaisedLocal" label="FundRaisedLocal"/>
+                <RHFTextField name="fundRaisedUsd" label="FundRaisedUsd"/>
+                <RHFTextField name="localCurrency" label="Currency"/>
                 <RHFTextField name="country" label="Country" />
 
                 <RHFTextField name="latitude" label="Latitude" InputLabelProps={{ shrink: true }} />
@@ -164,7 +139,7 @@ const CommunityEditForm = ({currentCommunity,community}:{currentCommunity:Props,
                   label="Longitude"
                   InputLabelProps={{ shrink: true }}
                 />
-                <RHFTextField name="description" label="Description" />
+                <RHFTextField name="description" label="Description"  />
               </Box>
 
               <Stack alignItems="flex-end" sx={{ mt: 3 }}>

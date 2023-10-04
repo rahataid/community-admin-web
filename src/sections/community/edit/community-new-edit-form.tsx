@@ -11,8 +11,7 @@ import { memo } from 'react';
 import { Stack } from '@mui/material';
 import { useParams } from 'next/navigation';
 import { useAWSUploader } from 'src/api/asset-uploader';
-import { useCommunity, useUpdateCommunityAssets } from 'src/api/community';
-import { number } from 'yup';
+import { useCommunity } from 'src/api/community';
 import CommunityEditForm from './community-edit-form';
 import UploadImage from './image-upload/upload-image';
 
@@ -21,7 +20,6 @@ const CommunityAddForm: React.FC = () => {
   const { community } = useCommunity(address);
 
 
-  const updateCommunityAssets = useUpdateCommunityAssets();
 
   const awsUploader = useAWSUploader();
 
@@ -67,18 +65,7 @@ const CommunityAddForm: React.FC = () => {
         error={awsUploader.uploadFile.error?.message}
         community={community}
       />
-      <CommunityEditForm community={community} currentCommunity={{
-        name: '',
-        country: '',
-        category: '',
-        latitude: 0,
-        longitude: 0,
-        undRaisedUsd: 0,
-        fundRaisedLocal: '',
-        localCurrency: '',
-        description: '',
-        categoryId: number,
-      }} />
+      <CommunityEditForm community={community}  />
      </Stack>
 
   );

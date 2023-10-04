@@ -73,6 +73,8 @@ export const endpoints = {
     list: '/communities',
     details: (address: string) => `/communities/${address}`,
     create: '/communities',
+    editCommunity: (address:string)=>`/communities/${address}/edit`,
+    deleteCommunity: (address:string)=>`/communities/${address}/delete`,
     updateMultipleAssets: (id: string, key: string) =>
       `communities/${id}/upload-asset/${key}/multiple`,
     uploadAssets: (id: string, key: string) => `/communities/${id}/upload-asset/${key}`,

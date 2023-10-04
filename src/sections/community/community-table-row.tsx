@@ -17,11 +17,11 @@ import { ICommunityItem } from 'src/types/community';
 
 type Props = {
   row: ICommunityItem;
-  onViewRow: VoidFunction;
   onEdit: VoidFunction;
+  onDeleteModal:VoidFunction
 };
 
-export default function CommunityTableRow({ row, onViewRow, onEdit }: Props) {
+export default function CommunityTableRow({ row,  onEdit,onDeleteModal }: Props) {
   const { name, address, category, country } = row;
 
   const quickEdit = useBoolean();
@@ -47,9 +47,9 @@ export default function CommunityTableRow({ row, onViewRow, onEdit }: Props) {
         <Label variant="soft">{country}</Label>
       </TableCell>
       <TableCell align="center" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-        <Tooltip title="View Details" placement="top" arrow>
-          <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={() => onViewRow()}>
-            <Iconify color="#118D57" icon="solar:eye-linear" />
+        <Tooltip title="Delete" placement="top" arrow>
+          <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={()=>onDeleteModal()}  >
+            <Iconify color="#118D57" icon="solar:trash-bin-trash-bold" />
           </IconButton>
         </Tooltip>
         <Tooltip title="Edit" placement="top" arrow>

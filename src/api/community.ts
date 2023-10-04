@@ -75,7 +75,7 @@ export function useUpdateCommunityAssets() {
       onError: () => {
         enqueueSnackbar('Error Updating Community assets', { variant: 'error' });
       },
-      onSuccess: () => {
+      onSuccess: (data) => {
         enqueueSnackbar('Community Assets Created Successfully', { variant: 'success' });
         queryClient.invalidateQueries(['communities']);
       },
@@ -93,4 +93,47 @@ export function useGetMultipleImageAssets(params:string){
 image,
 name
   }
+}
+
+export function useEditCommunity(address:string) {
+  const queryClient = useQueryClient();
+  const { enqueueSnackbar } = useSnackbar();
+  return useMutation(
+    ['community/edit'],
+    async (data) => {
+      const res = await CommunityService.editCommunity(address, data);
+      console.log(res)
+      return res?.data;
+    },
+    {
+      onError: () => {
+        enqueueSnackbar('Error Updating Community Data', { variant: 'error' });
+      },
+      onSuccess: () => {
+        enqueueSnackbar('Community Data Edited Successfully', { variant: 'success' });
+        queryClient.invalidateQueries(['communities']);
+      },
+    }
+  );
+}
+export function useRemoveCommunity(){
+  const queryClient = useQueryClient();
+  const { enqueueSnackbar } = useSnackbar();
+  return useMutation(
+    ['community/remove'],
+    async (address:string) => {
+      const res = await CommunityService.deleteCommunity(address);
+      console.log(res)
+      return res?.data;
+    },
+    {
+      onError: () => {
+        enqueueSnackbar('Error Updating Community Data', { variant: 'error' });
+      },
+      onSuccess: (data) => {
+        enqueueSnackbar(data, { variant: 'success' });
+        queryClient.invalidateQueries(['communities']);
+      },
+    }
+  );
 }

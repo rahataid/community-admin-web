@@ -80,7 +80,16 @@ export default function UploadImage({
 
 
  useEffect(() => {
-    setFile(`https://rahat-rumsan.s3.us-east-1.amazonaws.com/community/${community?.name}/${community?.images?.cover}`)
+    setFile(`https://rahat-rumsan.s3.us-east-1.amazonaws.com/community/${community?.name}/${community?.images?.cover}`);
+
+
+    // for(const gal as community?.images?.gallery){
+    //   setFiles(`https://rahat-rumsan.s3.us-east-1.amazonaws.com/community/${community?.name}/${gal}`)
+    // }
+//     const galleryUrls = community?.images?.gallery?.map(gal => `https://rahat-rumsan.s3.us-east-1.amazonaws.com/community/${community?.name}/${gal}`) || [];
+// setFiles(galleryUrls);
+
+
  }, [community])
  
 

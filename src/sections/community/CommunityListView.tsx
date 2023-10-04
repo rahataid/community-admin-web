@@ -34,13 +34,11 @@ import {
 //
 import { Button } from '@mui/material';
 import { RouterLink } from '@routes/components';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 // import { useUsers } from 'src/api/administration';
-import CommunityService from '@services/community';
-import { useCommunities } from 'src/api/community';
+import { ConfirmDialog } from '@components/custom-dialog';
+import { useCommunities, useRemoveCommunity } from 'src/api/community';
 import { ICommunityApiFilters, ICommunityItem } from 'src/types/community';
-import CommunityDetails from './commmunity-details-modal';
 import CommunityTableRow from './community-table-row';
 
 // ----------------------------------------------------------------------
@@ -59,21 +57,7 @@ const TABLE_HEAD = [
 export default function CommunitiesListView() {
   const table = useTable();
   const { enqueueSnackbar } = useSnackbar();
-  const queryClient = useQueryClient();
-
-  const { mutateAsync } = useMutation({
-    mutationFn: async (walletAddress: string) => {
-      const res = await CommunityService.approve(walletAddress);
-      return res.data;
-    },
-    onError: () => {
-      enqueueSnackbar('Error Approving Community', { variant: 'error' });
-    },
-    onSuccess: () => {
-      enqueueSnackbar('Community Approved', { variant: 'success' });
-      queryClient.invalidateQueries(['communities']);
-    },
-  });
+  const [selectedAddress,setSelectedAddress] = useState('')
 
   const defaultFilters: ICommunityApiFilters = useMemo(
     () => ({
@@ -90,12 +74,13 @@ export default function CommunitiesListView() {
   );
   const [filters, setFilters] = useState(defaultFilters);
   const { communities, meta } = useCommunities(filters);
-  const communityDetailsModal = useBoolean();
-  const [viewCommunity, setViewCommunity] = useState<ICommunityItem>({});
+  const communityRemoveModal = useBoolean();
+  // const [viewCommunity, setViewCommunity] = useState<ICommunityItem>({});
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
   const { push } = useRouter();
+  const removeCommunity = useRemoveCommunity()
 
   const createQueryString = useCallback((params: Record<string, string | number | boolean>) => {
     const queryParams = Object.entries(params)
@@ -116,37 +101,10 @@ export default function CommunitiesListView() {
 
   const notFound = (!communities.length && canReset) || !communities.length;
 
-  // const handleFilters = useCallback(
-  //   (name: string, value: ICommunityTableFilterValue) => {
-  //     table.onResetPage();
-  //     setFilters((prevState) => ({
-  //       ...prevState,
-  //       [name]: value,
-  //     }));
-
-  //     const updatedParams = {
-  //       ...filters,
-  //       ...Object.fromEntries(searchParams.entries()),
-  //       [name]: value,
-  //     };
-  //     const queryString = createQueryString(updatedParams);
-  //     push(`${pathname}?${queryString}`);
-  //   },
-  //   [table, createQueryString, push, searchParams, filters, pathname]
-  // );
-
   const handleResetFilters = useCallback(() => {
     setFilters(defaultFilters);
     push(pathname);
   }, [push, defaultFilters, pathname]);
-
-  const handleViewRow = useCallback(
-    (address: string) => {
-      communityDetailsModal.onTrue();
-      setViewCommunity(community);
-    },
-    [communityDetailsModal]
-  );
 
   const handleEditRow = useCallback(
     (address: string) => {
@@ -154,6 +112,25 @@ export default function CommunitiesListView() {
     },
     [push]
   );
+
+
+  const handleModalToDeleteRow = useCallback(
+    async(address)=>{
+     communityRemoveModal.onTrue()
+     setSelectedAddress(address)
+    }
+    ,[communityRemoveModal]
+  )
+
+  const handleDeleteRow = useCallback(
+  ()=>{
+
+   removeCommunity.mutate(selectedAddress)
+  communityRemoveModal.onFalse()
+
+
+  },[communityRemoveModal, removeCommunity, selectedAddress]
+  )
 
   useEffect(() => {
     const searchFilters: ICommunityApiFilters = {
@@ -165,11 +142,15 @@ export default function CommunitiesListView() {
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-      <CommunityDetails
-        open={communityDetailsModal.value}
-        onClose={communityDetailsModal.onFalse}
-        community={viewCommunity}
-      />
+       <ConfirmDialog 
+      open={communityRemoveModal.value} 
+      title='Selected community will be Permanently Removed'
+      action={
+        ( <Button  variant="text" onClick={handleDeleteRow} autoFocus>
+        Remove
+      </Button>)
+      } 
+      onClose={communityRemoveModal.onFalse}/>
       <CustomBreadcrumbs
         heading="Community: List"
         links={[{ name: 'Dashboard', href: paths.dashboard.root }, { name: 'List' }]}
@@ -237,8 +218,8 @@ export default function CommunitiesListView() {
                   <CommunityTableRow
                     key={row.id}
                     row={row}
-                    onViewRow={() => handleViewRow(row?.address)}
                     onEdit={() => handleEditRow(row?.address)}
+                    onDeleteModal={()=>handleModalToDeleteRow(row?.address)}
                   />
                 ))}
 

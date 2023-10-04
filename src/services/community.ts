@@ -13,10 +13,12 @@ const CommunityService = {
   create: (data: ICommunityDetails) => axiosInstance.post(endpoints.communitiy.create, { ...data }),
   detail: (address: string) => axiosInstance.get(endpoints.communitiy.details(address)),
   updateMultipleAssets: (id: string,key:string, data: any,) =>
-    axiosInstance.patch(endpoints.communitiy.updateMultipleAssets(id,key), data ),
+    axiosInstance.post(endpoints.communitiy.updateMultipleAssets(id,key), data ),
   uploadAssets: (id: string,key:string, data: any,) =>
     axiosInstance.post(endpoints.communitiy.uploadAssets(id,key), data),
-    getMultipleAsset:(address:string)=> axiosInstance.get(endpoints.communitiy.getMultipleAsset(address))
+    getMultipleAsset:(address:string)=> axiosInstance.get(endpoints.communitiy.getMultipleAsset(address)),
+    editCommunity:(address:string,data:any)=> axiosInstance.patch(endpoints.communitiy.editCommunity(address),{...data}),
+    deleteCommunity:(address:string)=> axiosInstance.delete(endpoints.communitiy.deleteCommunity(address))
 };
 
 export default CommunityService;
