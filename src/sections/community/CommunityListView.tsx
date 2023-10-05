@@ -36,8 +36,7 @@ import { Button } from '@mui/material';
 import { RouterLink } from '@routes/components';
 import { useSnackbar } from 'notistack';
 // import { useUsers } from 'src/api/administration';
-import { ConfirmDialog } from '@components/custom-dialog';
-import { useCommunities, useRemoveCommunity } from 'src/api/community';
+import { useCommunities } from 'src/api/community';
 import { ICommunityApiFilters, ICommunityItem } from 'src/types/community';
 import CommunityTableRow from './community-table-row';
 
@@ -57,7 +56,6 @@ const TABLE_HEAD = [
 export default function CommunitiesListView() {
   const table = useTable();
   const { enqueueSnackbar } = useSnackbar();
-  const [selectedAddress,setSelectedAddress] = useState('')
 
   const defaultFilters: ICommunityApiFilters = useMemo(
     () => ({
@@ -74,13 +72,11 @@ export default function CommunitiesListView() {
   );
   const [filters, setFilters] = useState(defaultFilters);
   const { communities, meta } = useCommunities(filters);
-  const communityRemoveModal = useBoolean();
   // const [viewCommunity, setViewCommunity] = useState<ICommunityItem>({});
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
   const { push } = useRouter();
-  const removeCommunity = useRemoveCommunity()
 
   const createQueryString = useCallback((params: Record<string, string | number | boolean>) => {
     const queryParams = Object.entries(params)
@@ -114,23 +110,7 @@ export default function CommunitiesListView() {
   );
 
 
-  const handleModalToDeleteRow = useCallback(
-    async(address)=>{
-     communityRemoveModal.onTrue()
-     setSelectedAddress(address)
-    }
-    ,[communityRemoveModal]
-  )
 
-  const handleDeleteRow = useCallback(
-  ()=>{
-
-   removeCommunity.mutate(selectedAddress)
-  communityRemoveModal.onFalse()
-
-
-  },[communityRemoveModal, removeCommunity, selectedAddress]
-  )
 
   useEffect(() => {
     const searchFilters: ICommunityApiFilters = {
@@ -142,15 +122,7 @@ export default function CommunitiesListView() {
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-       <ConfirmDialog 
-      open={communityRemoveModal.value} 
-      title='Selected community will be Permanently Removed'
-      action={
-        ( <Button  variant="text" onClick={handleDeleteRow} autoFocus>
-        Remove
-      </Button>)
-      } 
-      onClose={communityRemoveModal.onFalse}/>
+
       <CustomBreadcrumbs
         heading="Community: List"
         links={[{ name: 'Dashboard', href: paths.dashboard.root }, { name: 'List' }]}
@@ -219,7 +191,6 @@ export default function CommunitiesListView() {
                     key={row.id}
                     row={row}
                     onEdit={() => handleEditRow(row?.address)}
-                    onDeleteModal={()=>handleModalToDeleteRow(row?.address)}
                   />
                 ))}
 
