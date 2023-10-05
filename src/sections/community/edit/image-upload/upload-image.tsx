@@ -4,9 +4,7 @@
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
-import Switch from '@mui/material/Switch';
 // routes
 // utils
 // hooks
@@ -83,11 +81,8 @@ export default function UploadImage({
     setFile(`https://rahat-rumsan.s3.us-east-1.amazonaws.com/community/${community?.name}/${community?.images?.cover}`);
 
 
-    // for(const gal as community?.images?.gallery){
-    //   setFiles(`https://rahat-rumsan.s3.us-east-1.amazonaws.com/community/${community?.name}/${gal}`)
-    // }
-//     const galleryUrls = community?.images?.gallery?.map(gal => `https://rahat-rumsan.s3.us-east-1.amazonaws.com/community/${community?.name}/${gal}`) || [];
-// setFiles(galleryUrls);
+   const galleryUrls = community?.images?.gallery?.map(gal => `https://rahat-rumsan.s3.us-east-1.amazonaws.com/community/${community?.name}/${gal}`) || [];
+   setFiles(galleryUrls);
 
 
  }, [community])
@@ -96,30 +91,8 @@ export default function UploadImage({
   return (
     <Grid sx={{ my: 5 }}>
       <Stack spacing={5}>
-        <Card>
-          <CardHeader
-            title="Upload Multi Photos"
-            action={
-              <FormControlLabel
-                control={<Switch checked={preview.value} onClick={preview.onToggle} />}
-                label="Show Thumbnail"
-              />
-            }
-          />
-          <CardContent>
-            <Upload
-              multiple
-              thumbnail={preview.value}
-              files={files}
-              onDrop={handleDropMultiFile}
-              onRemove={handleRemoveFile}
-              onRemoveAll={handleRemoveAllFiles}
-              onUpload={onUploadMultiple}
-            />
-          </CardContent>
-        </Card>
 
-        <Card>
+      <Card>
           <CardHeader title="Upload Cover Photo" />
           <CardContent>
             {error && (
@@ -139,6 +112,32 @@ export default function UploadImage({
             />
           </CardContent>
         </Card>
+
+
+        <Card>
+          {/* <CardHeader
+            title="Upload Multi Photos"
+            action={
+              <FormControlLabel
+                control={<Switch checked={preview.value} onClick={preview.onTrue} />}
+                label="Show Thumbnail"
+              />
+            }
+          /> */}
+          <CardContent>
+            <Upload
+              multiple
+              thumbnail={preview.value === false}
+              files={files}
+              onDrop={handleDropMultiFile}
+              onRemove={handleRemoveFile}
+              onRemoveAll={handleRemoveAllFiles}
+              onUpload={onUploadMultiple}
+            />
+          </CardContent>
+        </Card>
+
+       
       </Stack>
     </Grid>
   );

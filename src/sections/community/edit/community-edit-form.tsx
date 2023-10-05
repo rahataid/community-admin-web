@@ -30,13 +30,16 @@ import FormProvider, { RHFSelect, RHFTextField } from 'src/components/hook-form'
 import { ICommunityTableFilterValue } from 'src/types/community';
 
 interface FormValues extends ICommunityTableFilterValue {}
+type Props = {
+  community:any,
+};
 
-
-const CommunityEditForm = ({ community }: { community: any }) => {
+const CommunityEditForm = ({community}:Props) => {
   const { address } = useParams();
 
   const { error, isLoading, mutate } = useEditCommunity(address);
   const { categories } = useCategory();
+
   // const { community } = useCommunity(address);
   const NewCommunitySchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -151,6 +154,8 @@ const CommunityEditForm = ({ community }: { community: any }) => {
           </Stack>
         </Grid>
       </Grid>
+
+     
     </FormProvider>
   );
 };
