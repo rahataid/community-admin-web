@@ -12,7 +12,7 @@ import { memo, useCallback, useState } from 'react';
 import { ConfirmDialog } from '@components/custom-dialog';
 import Iconify from '@components/iconify/iconify';
 import { useBoolean } from '@hooks/use-boolean';
-import { Button, IconButton, Stack, Tooltip } from '@mui/material';
+import { Button, Stack, Tooltip } from '@mui/material';
 import { paths } from '@routes/paths';
 import { useParams, useRouter } from 'next/navigation';
 import { useAWSUploader } from 'src/api/asset-uploader';
@@ -27,7 +27,6 @@ const CommunityAddForm: React.FC = () => {
   const removeCommunity = useRemoveCommunity();
   const [selectedAddress, setSelectedAddress] = useState('');
   const { push } = useRouter();
-  const quickEdit = useBoolean();
 
   const awsUploader = useAWSUploader();
 
@@ -58,9 +57,9 @@ const CommunityAddForm: React.FC = () => {
   };
 
   const handleModalToDeleteRow = useCallback(
-    async (address) => {
+    async (address1) => {
       communityRemoveModal.onTrue();
-      setSelectedAddress(address);
+      setSelectedAddress(address1);
     },
     [communityRemoveModal]
   );
@@ -91,12 +90,16 @@ const CommunityAddForm: React.FC = () => {
         }}
         action={
           <Tooltip title="Delete" placement="top" arrow>
-            <IconButton
-              color={quickEdit.value ? 'inherit' : 'default'}
+            <Button
+              variant="outlined"
+              endIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
+              color="error"
               onClick={() => handleModalToDeleteRow(community?.address)}
+
             >
-              <Iconify color="red" icon="solar:trash-bin-trash-bold" />
-            </IconButton>
+             Delete
+            </Button>
+
           </Tooltip>
         }
       />

@@ -172,7 +172,7 @@ const CommunityAddForm: React.FC = ({ currentCommunity }: Props) => {
                 ))}
               </RHFSelect>
               
-              <RHFMultiSelect //Single Select
+              <RHFMultiSelect // Single Select
                 name="country"
                 options={countries}
                 placeholder='Select country'
@@ -202,7 +202,7 @@ const CommunityAddForm: React.FC = ({ currentCommunity }: Props) => {
               display="grid"
             > 
             
-             <RHFUpload multiple={true} name='imageUpload'/>
+             <RHFUpload multiple name='imageUpload'/>
             
              </Box>
              </Card>

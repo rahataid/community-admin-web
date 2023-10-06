@@ -10,7 +10,6 @@ import { useBoolean } from 'src/hooks/use-boolean';
 // components
 import Iconify from 'src/components/iconify';
 //
-import Label from '@components/label/label';
 import { ICommunityItem } from 'src/types/community';
 
 // ----------------------------------------------------------------------
@@ -27,26 +26,23 @@ export default function CommunityTableRow({ row,  onEdit}: Props) {
 
   return (
     <TableRow hover>
-      <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
+      <TableCell>
         <ListItemText primary={name} primaryTypographyProps={{ typography: 'body2' }} />
       </TableCell>
 
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>
-        {' '}
-        <Label variant="soft">{address}</Label>
+      <TableCell>
+      <ListItemText primary={address} primaryTypographyProps={{ typography: 'body2' }} />
       </TableCell>
 
       <TableCell sx={{ whiteSpace: 'nowrap' }}>
-        {' '}
-        <Label variant="soft">{category?.name}</Label>
+      <ListItemText primary={category?.name} primaryTypographyProps={{ typography: 'body2' }} />
       </TableCell>
 
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>
-        {' '}
-        <Label variant="soft">{country}</Label>
+      <TableCell>
+      <ListItemText primary={country} primaryTypographyProps={{ typography: 'body2' }} />
       </TableCell>
-      <TableCell align="center" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-       
+
+      <TableCell sx={{ alignItems: 'center' }}>
         <Tooltip title="Edit" placement="top" arrow>
           <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={() => onEdit()}>
             <Iconify color="#118D57" icon="iconamoon:edit-light" />
