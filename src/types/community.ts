@@ -51,11 +51,19 @@ export type ICommunityApiFilters = {
 
 export type ICommunityTableFilterValue = {
   name: string;
-  walletAddress?: string;
-  country?: string;
-  category: string;
+  country: string;
+  categoryId: string;
   latitude:number;
   longitude:number;
+  fundRaisedUsd:number;
+  fundRaisedLocal:string;
+  localCurrency:string;
+  description:string;
+}
+
+export type ICommunityApiFilter ={
+  data:any
+ 
 }
 
 export interface ICommunityDetails{

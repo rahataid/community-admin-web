@@ -105,7 +105,6 @@ export default function CategoriesListView() {
           mb: { xs: 3, md: 5 },
         }}
         action={
-          <>
           <Button
             component={RouterLink}
             href={paths.dashboard.general.category.add}
@@ -115,7 +114,6 @@ export default function CategoriesListView() {
           >
             Add Category
           </Button>
-        </>
         }
       />
       <Card>

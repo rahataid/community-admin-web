@@ -4,16 +4,14 @@
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
-import Switch from '@mui/material/Switch';
 // routes
 // utils
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // components
 import { Alert, Grid } from '@mui/material';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Upload } from 'src/components/upload';
 
 // ----------------------------------------------------------------------
@@ -23,6 +21,7 @@ type UploadImageProps = {
   handleUploadMultiple: (files: File[]) => void;
   error?: string;
   isUploading: boolean;
+  community:any
 };
 
 export default function UploadImage({
@@ -30,6 +29,7 @@ export default function UploadImage({
   handleUploadMultiple,
   error,
   isUploading,
+  community
 }: UploadImageProps) {
   const preview = useBoolean();
   const [files, setFiles] = useState<(File | string)[]>([]);
@@ -75,33 +75,24 @@ export default function UploadImage({
   const onUploadCoverPhoto = () => {
     handleCoverUpload(file);
   };
+
+
+ useEffect(() => {
+    setFile(`https://rahat-rumsan.s3.us-east-1.amazonaws.com/community/${community?.name}/${community?.images?.cover}`);
+
+
+   const galleryUrls = community?.images?.gallery?.map(gal => `https://rahat-rumsan.s3.us-east-1.amazonaws.com/community/${community?.name}/${gal}`) || [];
+   setFiles(galleryUrls);
+
+
+ }, [community])
+ 
+
   return (
     <Grid sx={{ my: 5 }}>
       <Stack spacing={5}>
-        <Card>
-          <CardHeader
-            title="Upload Multi Photos"
-            action={
-              <FormControlLabel
-                control={<Switch checked={preview.value} onClick={preview.onToggle} />}
-                label="Show Thumbnail"
-              />
-            }
-          />
-          <CardContent>
-            <Upload
-              multiple
-              thumbnail={preview.value}
-              files={files}
-              onDrop={handleDropMultiFile}
-              onRemove={handleRemoveFile}
-              onRemoveAll={handleRemoveAllFiles}
-              onUpload={onUploadMultiple}
-            />
-          </CardContent>
-        </Card>
 
-        <Card>
+      <Card>
           <CardHeader title="Upload Cover Photo" />
           <CardContent>
             {error && (
@@ -116,10 +107,37 @@ export default function UploadImage({
               onDelete={() => setFile(null)}
               onUpload={onUploadCoverPhoto}
               helperText="Max file size is 15MB"
+              thumbnail={preview.value}
               disabled={isUploading}
             />
           </CardContent>
         </Card>
+
+
+        <Card>
+          {/* <CardHeader
+            title="Upload Multi Photos"
+            action={
+              <FormControlLabel
+                control={<Switch checked={preview.value} onClick={preview.onTrue} />}
+                label="Show Thumbnail"
+              />
+            }
+          /> */}
+          <CardContent>
+            <Upload
+              multiple
+              thumbnail={preview.value === false}
+              files={files}
+              onDrop={handleDropMultiFile}
+              onRemove={handleRemoveFile}
+              onRemoveAll={handleRemoveAllFiles}
+              onUpload={onUploadMultiple}
+            />
+          </CardContent>
+        </Card>
+
+       
       </Stack>
     </Grid>
   );

@@ -1,15 +1,11 @@
 'use client';
 
 import { MapData } from '@components/map';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Container from '@mui/material/Container';
-import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import dynamic from 'next/dynamic';
 import { MAPBOX_TOKEN } from 'src/config-global';
 
-const MapClusters: any = dynamic(() => import('./clusters'));
+const MapDraggableMarkers = dynamic(() => import('./draggable-markers'));
 
 const THEMES = {
   streets: 'mapbox://styles/mapbox/streets-v11',
@@ -28,7 +24,7 @@ const baseSettings = {
 
 const StyledMapContainer = styled('div')(({ theme }) => ({
   zIndex: 0,
-  height: 480,
+  height: 344,
   overflow: 'hidden',
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
@@ -43,16 +39,8 @@ type MapViewProps = {
 
 export default function MapView({ geoData }: MapViewProps) {
   return (
-    <Container>
-      <Stack>
-        <Card>
-          <CardContent>
-            <StyledMapContainer>
-              <MapClusters {...baseSettings} mapStyle={THEMES.light} geoData={geoData} />
-            </StyledMapContainer>
-          </CardContent>
-        </Card>
-      </Stack>
-    </Container>
+    <StyledMapContainer>
+    <MapDraggableMarkers {...baseSettings} mapStyle={THEMES.light} />
+  </StyledMapContainer>
   );
 }

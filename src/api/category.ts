@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { IApiResponseError, ICategoryApiFilter, ICategoryDetails, ICategoryTableFilterValue } from "src/types/community";
 
 export function useCategory(params?:ICategoryApiFilter){
-    const { data, isLoading, error } = useQuery(['categories', params], async () => {
+    const { data } = useQuery(['categories', params], async () => {
         const res = await CategoryService.list(params);
         return res;
       });
@@ -24,6 +24,7 @@ export function useCategory(params?:ICategoryApiFilter){
     ICategoryTableFilterValue>(
       ['categories/create'],
       async (data: ICategoryTableFilterValue) => {
+        console.log(data)
         const res = await CategoryService.create(data);
         return res.data;
       },

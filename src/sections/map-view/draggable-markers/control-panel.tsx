@@ -7,7 +7,7 @@ import { StyledControlPanel } from 'src/components/map';
 
 // ----------------------------------------------------------------------
 
-const EVENT_NAMES = ['onDragStart', 'onDrag', 'onDragEnd'] as const;
+const EVENT_NAMES = ['onDragEnd'] as const;
 
 function round5(value: number) {
   return (Math.round(value * 1e5) / 1e5).toFixed(5);
@@ -27,17 +27,13 @@ function ControlPanel({ events = {} }: Props) {
 
         return (
           <div key={event}>
-            <Typography variant="subtitle2" sx={{ color: 'common.white' }}>
-              {event}:
-            </Typography>
-
             {lngLat ? (
               <Typography variant="subtitle2" sx={{ color: 'primary.main' }}>
                 {`${round5(lngLat.lng)}, ${round5(lngLat.lat)}`}
               </Typography>
             ) : (
               <Typography variant="body2" component="em" sx={{ color: 'error.main' }}>
-                null
+                Work in Progress
               </Typography>
             )}
           </div>

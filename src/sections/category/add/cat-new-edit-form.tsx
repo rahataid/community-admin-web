@@ -10,13 +10,11 @@ import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 // utils
 // routes
-import { useRouter } from 'src/routes/hook';
 // types
 // assets
 // components
 import { useCategoryCreate } from 'src/api/category';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
-import { useSnackbar } from 'src/components/snackbar';
 import { ICategoryTableFilterValue } from 'src/types/community';
 
 type Props = {
@@ -26,8 +24,6 @@ type Props = {
 interface FormValues extends ICategoryTableFilterValue {}
 
 const CategoryAddForm: React.FC = ({ currentCategory }: Props) => {
-  const { push } = useRouter();
-  const { enqueueSnackbar } = useSnackbar();
   const createCategory = useCategoryCreate();
 
   const NewUserSchema = Yup.object().shape({
@@ -46,13 +42,14 @@ const CategoryAddForm: React.FC = ({ currentCategory }: Props) => {
     defaultValues,
   });
 
-  const { reset, handleSubmit, setValue, trigger } = methods;
+  const { reset, handleSubmit } = methods;
 
   // const onSubmit = useCallback((data: IUserTableFilters) => mutate(data), [mutate]);
   const onSubmit = useCallback((data: ICategoryTableFilterValue) => {
+    console.log(data)
     createCategory.mutate(data)
     reset()}
-  , [createCategory.mutate]);
+  , [createCategory.mutate, reset]);
 
 
   return (

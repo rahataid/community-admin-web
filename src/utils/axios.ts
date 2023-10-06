@@ -1,6 +1,6 @@
 import axios from 'axios';
 // config
-// import { HOST_API } from '@config';
+import { HOST_API } from '@config';
 import { getToken } from './storage-available';
 
 // ----------------------------------------------------------------------
@@ -9,7 +9,7 @@ const token = getToken();
 
 export const axiosInstance = axios.create({
   // TODO:BASE URl
-  baseURL: 'https://community-api-stage.rahat.io',
+  baseURL: HOST_API,
   headers: { Authorization: `Bearer ${token}` },
 });
 
@@ -73,9 +73,12 @@ export const endpoints = {
     list: '/communities',
     details: (address: string) => `/communities/${address}`,
     create: '/communities',
+    editCommunity: (address:string)=>`/communities/${address}/edit`,
+    deleteCommunity: (address:string)=>`/communities/${address}/delete`,
     updateMultipleAssets: (id: string, key: string) =>
       `communities/${id}/upload-asset/${key}/multiple`,
     uploadAssets: (id: string, key: string) => `/communities/${id}/upload-asset/${key}`,
+    getMultipleAsset:(address:string)=>`/communities/${address}/images`
   },
   category: {
     create: '/categories',
