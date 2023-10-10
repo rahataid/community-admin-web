@@ -1,39 +1,38 @@
 export type ICategoryItem = {
   id: number;
-  name:string;
+  name: string;
   createdAt: string;
   updatedAt: string;
   deletedAt: string;
-}
-
+};
 
 export type ICategoryList = ICategoryItem[];
-export type ICategoryApiFilter={
+export type ICategoryApiFilter = {
   page?: number;
   perPage?: number;
   name?: string;
   orderBy?: string;
   order?: 'asc' | 'desc';
-}
+};
 
 export type ICategoryTableFilterValue = {
   name: string;
-}
-export type ICategoryDetails={
-  name:string
-}
+};
+export type ICategoryDetails = {
+  name: string;
+};
 export type ICommunityItem = {
   id: number;
   address?: string;
   name: string;
   description: string;
   longitude: number;
-  latitude:number;
+  latitude: number;
   country: string;
   fundRaisedUsd: number;
   category: ICategoryItem;
-  fundRaisedLocal:string;
-  localCurrency:string;
+  fundRaisedLocal: string;
+  localCurrency: string;
   createdAt: string;
   updatedAt: string;
   deletedAt: string;
@@ -53,33 +52,46 @@ export type ICommunityTableFilterValue = {
   name: string;
   country: string;
   categoryId: string;
-  latitude:number;
-  longitude:number;
-  fundRaisedUsd:number;
-  fundRaisedLocal:string;
-  localCurrency:string;
-  description:string;
-}
+  latitude: number;
+  longitude: number;
+  fundRaisedUsd: number;
+  fundRaisedLocal: string;
+  localCurrency: string;
+  description: string;
+};
 
-export type ICommunityApiFilter ={
-  data:any
- 
-}
+export type ICommunityTableAddValue = {
+  name: string;
+  country: string;
+  categoryId: number;
+  description: string;
+  address: string;
+};
+export type ICommunityApiFilter = {
+  data: any;
+};
 
-export interface ICommunityDetails{
+export interface ICommunityDetails {
   name: string;
   walletAddress?: string;
   country?: string;
   category: string;
-  latitude:number;
-  longitude:number;
+  latitude: number;
+  longitude: number;
 }
 
-export interface IcommunityAssets{
-  cover:string;
-  logo:string;
-  gallery:string[]
+export interface ICommunityAddDetails {
+  name: string;
+  address?: string;
+  country?: string;
+  categoryId: number;
+  description: string;
+}
 
+export interface IcommunityAssets {
+  cover: string;
+  logo: string;
+  gallery: string[];
 }
 
 export type ICommunityPagination = {
@@ -109,4 +121,4 @@ export type IApiResponseError = {
   name: string;
   success: boolean;
   timestamp: number;
-}|null;
+} | null;

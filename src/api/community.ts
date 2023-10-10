@@ -4,10 +4,10 @@ import { useSnackbar } from 'notistack';
 import { useMemo } from 'react';
 import { IApiResponseError } from 'src/types/beneficiaries';
 import {
+  ICommunityAddDetails,
   ICommunityApiFilters,
-  ICommunityDetails,
   ICommunityListHookReturn,
-  ICommunityTableFilterValue,
+  ICommunityTableAddValue,
 } from 'src/types/community';
 
 export function useCommunities(params?: ICommunityApiFilters): ICommunityListHookReturn {
@@ -44,9 +44,9 @@ export function useCommunity(address: string) {
 export function useCreateCommunities() {
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
-  return useMutation<ICommunityDetails, IApiResponseError, ICommunityTableFilterValue>(
+  return useMutation<ICommunityAddDetails, IApiResponseError, ICommunityTableAddValue>(
     ['categories/create'],
-    async (data: ICommunityTableFilterValue) => {
+    async (data: ICommunityTableAddValue) => {
       const res = await CommunityService.create(data);
       return res?.data;
     },
@@ -82,27 +82,27 @@ export function useUpdateCommunityAssets() {
     }
   );
 }
-export function useGetMultipleImageAssets(params:string){
+export function useGetMultipleImageAssets(params: string) {
   const { data, isLoading, error } = useQuery(['communities/images', params], async () => {
     const res = await CommunityService.getMultipleAsset(params);
     return res;
   });
   const image = useMemo(() => data?.data?.multiple || [], [data?.data?.multiple]);
-  const name = useMemo(() => data?.data?.name || '', (data?.data?.name));
+  const name = useMemo(() => data?.data?.name || '', data?.data?.name);
   return {
-image,
-name
-  }
+    image,
+    name,
+  };
 }
 
-export function useEditCommunity(address:string) {
+export function useEditCommunity(address: string) {
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
   return useMutation(
     ['community/edit'],
     async (data) => {
       const res = await CommunityService.editCommunity(address, data);
-      console.log(res)
+      console.log(res);
       return res?.data;
     },
     {
@@ -116,14 +116,14 @@ export function useEditCommunity(address:string) {
     }
   );
 }
-export function useRemoveCommunity(){
+export function useRemoveCommunity() {
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
   return useMutation(
     ['community/remove'],
-    async (address:string) => {
+    async (address: string) => {
       const res = await CommunityService.deleteCommunity(address);
-      console.log(res)
+      console.log(res);
       return res?.data;
     },
     {
