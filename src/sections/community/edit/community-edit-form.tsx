@@ -21,7 +21,6 @@ import { useParams } from 'src/routes/hook';
 // types
 // assets
 // components
-import { MapData } from '@components/map/types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Box, Card, MenuItem } from '@mui/material';
@@ -33,10 +32,10 @@ import { ICommunityTableFilterValue } from 'src/types/community';
 
 interface FormValues extends ICommunityTableFilterValue {}
 type Props = {
-  community:any,
+  community: any;
 };
 
-const CommunityEditForm = ({community}:Props) => {
+const CommunityEditForm = ({ community }: Props) => {
   const { address } = useParams();
 
   const { isLoading, mutate } = useEditCommunity(address);
@@ -53,7 +52,7 @@ const CommunityEditForm = ({community}:Props) => {
     localCurrency: Yup.string(),
     category: Yup.string(),
     description: Yup.string(),
-    district:  Yup.string(),
+    district: Yup.string(),
   });
 
   const defaultValues = useMemo<FormValues>(
@@ -67,7 +66,7 @@ const CommunityEditForm = ({community}:Props) => {
       fundRaisedLocal: '',
       localCurrency: '',
       description: '',
-      district:''
+      district: '',
     }),
     []
   );
@@ -77,7 +76,7 @@ const CommunityEditForm = ({community}:Props) => {
     defaultValues,
   });
 
-  const {  handleSubmit, setValue, getValues } = methods;
+  const { handleSubmit, setValue, getValues } = methods;
   useEffect(() => {
     if (community) {
       const defaultValuesKeys = Object.keys(defaultValues) as (keyof FormValues)[];
@@ -110,26 +109,26 @@ const CommunityEditForm = ({community}:Props) => {
     [mutate]
   );
 
-  const obj = [
-    {latitude:getValues("latitude"), longitude:getValues("longitude")}
-  ]
-    
-  const geoData: MapData[] | undefined = useMemo(
-    () =>
-      obj?.map((item) => ({
-        type: 'Feature',
-        geometry: {
-          type: 'Point',
-          coordinates: [item?.latitude, item?.longitude],
-        },
-        properties: {
-          // cluster: true,
-          id: `long${item?.longitude}-lat${item?.latitude}`,
-        },
-      })) || [],
-    [obj]
-  );
+  const obj = { latitude: getValues('latitude'), longitude: getValues('longitude') };
+  // const geoData: MapData[] | undefined = useMemo(
+  //   () =>
+  //     obj?.map((item) => ({
+  //       type: 'Feature',
+  //       geometry: {
+  //         type: 'Point',
+  //         coordinates: [item?.latitude, item?.longitude],
+  //       },
+  //       properties: {
+  //         // cluster: true,
+  //         // id: `long${item?.longitude}-lat${item?.latitude}`,
+  //         latitude: item?.latitude,
+  //         longitude: item?.longitude,
+  //       },
+  //     })) || [],
+  //   [obj]
+  // );
 
+  // console.log(geoData);
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
@@ -156,12 +155,18 @@ const CommunityEditForm = ({community}:Props) => {
                   ))}
                 </RHFSelect>
                 <Box />
-                <RHFTextField name="localCurrency" label="Currency"/>
-                <RHFTextField name="fundRaisedLocal" label="FundRaisedLocal"/>
-                <RHFTextField name="fundRaisedUsd" label="FundRaisedUsd"/>
+                <RHFTextField name="localCurrency" label="Currency" />
+                <RHFTextField name="fundRaisedLocal" label="FundRaisedLocal" />
+                <RHFTextField name="fundRaisedUsd" label="FundRaisedUsd" />
                 <RHFTextField name="district" label="District" />
                 <RHFTextField name="country" label="Country" />
-                <RHFTextField name="description" label="Description" multiline sx={{gridColumn: 'span 3'}} rows={6} />
+                <RHFTextField
+                  name="description"
+                  label="Description"
+                  multiline
+                  sx={{ gridColumn: 'span 3' }}
+                  rows={6}
+                />
               </Box>
             </Card>
           </Stack>
@@ -169,7 +174,7 @@ const CommunityEditForm = ({community}:Props) => {
         <Grid xs={12} md={4}>
           <Stack spacing={5}>
             <Card sx={{ p: 1 }}>
-            <Box
+              <Box
                 rowGap={2}
                 columnGap={2}
                 display="grid"
@@ -181,25 +186,28 @@ const CommunityEditForm = ({community}:Props) => {
               >
                 {/* <RHFTextField name="description" label="Description" multiline sx={{gridColumn: 'span 3'}} rows={13} /> */}
                 {/* <MapView geoData={arr} /> */}
-                <RHFTextField name="latitude" label="Longitude" InputLabelProps={{ shrink: true }} />
+                <RHFTextField
+                  name="latitude"
+                  label="Longitude"
+                  InputLabelProps={{ shrink: true }}
+                />
                 <RHFTextField
                   name="longitude"
                   label="Latitude"
                   InputLabelProps={{ shrink: true }}
                 />
               </Box>
-                <MapView geoData={geoData} />
+              {/* @ts-ignore */}
+              <MapView geoData={obj} />
             </Card>
             <Stack alignItems="flex-end">
-                <LoadingButton type="submit" variant="outlined" color="success" loading={isLoading}>
-                  Save Changes
-                </LoadingButton>
-              </Stack>
+              <LoadingButton type="submit" variant="outlined" color="success" loading={isLoading}>
+                Save Changes
+              </LoadingButton>
+            </Stack>
           </Stack>
         </Grid>
       </Grid>
-
-     
     </FormProvider>
   );
 };

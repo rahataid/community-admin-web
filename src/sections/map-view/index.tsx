@@ -1,6 +1,5 @@
 'use client';
 
-import { MapData } from '@components/map';
 import { styled } from '@mui/material/styles';
 import dynamic from 'next/dynamic';
 import { MAPBOX_TOKEN } from 'src/config-global';
@@ -33,14 +32,20 @@ const StyledMapContainer = styled('div')(({ theme }) => ({
   },
 }));
 
+type latlang = {
+  latitude: number;
+  longitude: number;
+};
 type MapViewProps = {
-  geoData: MapData[];
+  geoData: latlang;
 };
 
 export default function MapView({ geoData }: MapViewProps) {
+  console.log(geoData);
   return (
     <StyledMapContainer>
-    <MapDraggableMarkers {...baseSettings} mapStyle={THEMES.light} />
-  </StyledMapContainer>
+      {/* @ts-ignore */}
+      <MapDraggableMarkers {...baseSettings} mapStyle={THEMES.light} geoData={geoData} />
+    </StyledMapContainer>
   );
 }

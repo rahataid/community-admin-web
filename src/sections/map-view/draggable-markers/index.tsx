@@ -7,11 +7,13 @@ import ControlPanel from './control-panel';
 
 // ----------------------------------------------------------------------
 
-function MapDraggableMarkers({ ...other }: MapBoxProps) {
+function MapDraggableMarkers({ geoData, ...other }: MapBoxProps) {
   const [marker, setMarker] = useState({
-    latitude: other.latitude || 26.72101,
-    longitude:  other.longitude || 85.67137,
+    latitude: geoData?.latitude,
+    longitude: geoData?.longitude,
   });
+
+  console.log(marker);
 
   const [events, logEvents] = useState<Record<string, LngLat>>({});
 
@@ -34,7 +36,10 @@ function MapDraggableMarkers({ ...other }: MapBoxProps) {
 
   return (
     <>
-      <Map initialViewState={{ latitude: 40, longitude: -100, zoom: 3.5 }} {...other}>
+      <Map
+        initialViewState={{ latitude: marker?.latitude, longitude: marker?.longitude, zoom: 3.5 }}
+        {...other}
+      >
         <MapControl />
 
         <MapMarker
@@ -48,7 +53,7 @@ function MapDraggableMarkers({ ...other }: MapBoxProps) {
         />
       </Map>
 
-      <ControlPanel events={events} />
+      <ControlPanel events={events} longitude={marker.longitude} latitude={marker.latitude} />
     </>
   );
 }

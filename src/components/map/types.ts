@@ -19,6 +19,10 @@ export type MapSettings = {
   touchRotate: boolean;
   doubleClickZoom: boolean;
   touchZoomRotate: boolean;
+  geoData: {
+    latitude: number;
+    longitude: number;
+  };
 };
 
 export type MapSettingKeys =

@@ -17,14 +17,16 @@ function round5(value: number) {
 
 type Props = {
   events: Record<string, LngLat>;
+  latitude: number;
+  longitude: number;
 };
 
-function ControlPanel({ events = {} }: Props) {
+function ControlPanel({ longitude, latitude, events = {} }: Props) {
+  console.log(longitude);
   return (
     <StyledControlPanel>
       {EVENT_NAMES.map((event) => {
         const lngLat = events[event];
-
         return (
           <div key={event}>
             {lngLat ? (
@@ -33,7 +35,7 @@ function ControlPanel({ events = {} }: Props) {
               </Typography>
             ) : (
               <Typography variant="body2" component="em" sx={{ color: 'error.main' }}>
-                Work in Progress
+                {`${longitude}, ${latitude}`}
               </Typography>
             )}
           </div>
