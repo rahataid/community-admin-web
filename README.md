@@ -1,4 +1,4 @@
-# Rahat Documentation
+# Rahat Documentation 
 
 Welcome to Rahat, an open-source blockchain-based token cash and voucher assistance platform. Rahat streamlines humanitarian aid distribution by providing end-to-end transparency, making it efficient and cost-effective.
 
