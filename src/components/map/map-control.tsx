@@ -1,4 +1,4 @@
-import { NavigationControl, FullscreenControl, ScaleControl, GeolocateControl } from 'react-map-gl';
+import { FullscreenControl, GeolocateControl } from 'react-map-gl';
 //
 import { StyledMapControls } from './styles';
 
@@ -27,9 +27,9 @@ export default function MapControl({
 
       {!hideFullscreenControl && <FullscreenControl position="top-left" />}
 
-      {!hideScaleControl && <ScaleControl position="bottom-left" />}
+      {/* {!hideScaleControl && <ScaleControl position="bottom-left" />} */}
 
-      {!hideNavigationnControl && <NavigationControl position="bottom-left" />}
+      {/* {!hideNavigationnControl && <NavigationControl position="bottom-left" />} */}
     </>
   );
 }
