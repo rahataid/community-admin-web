@@ -9,7 +9,7 @@
 
 'use client';
 
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 // @mui
@@ -40,6 +40,11 @@ const CommunityEditForm = ({ community }: Props) => {
 
   const { isLoading, mutate } = useEditCommunity(address);
   const { categories } = useCategory();
+  const [latLang, setLatLang] = useState({
+    latitude: 0,
+    longitude: 0,
+  });
+  const [updateLatLang, setUpdateLatLang] = useState();
 
   // const { community } = useCommunity(address);
   const NewCommunitySchema = Yup.object().shape({
@@ -109,7 +114,29 @@ const CommunityEditForm = ({ community }: Props) => {
     [mutate]
   );
 
-  const obj = { latitude: getValues('latitude'), longitude: getValues('longitude') };
+  // const obj = { latitude: getValues('latitude'), longitude: getValues('longitude') };
+  useEffect(() => {
+    if (community) {
+      setLatLang({
+        latitude: getValues('latitude'),
+        longitude: getValues('longitude'),
+      });
+    }
+  }, [community, getValues]);
+
+  const getUpdateLatLang = (data: any) => {
+    setUpdateLatLang(data);
+  };
+
+  useEffect(() => {
+    if (updateLatLang) {
+      setValue('latitude', updateLatLang.latitude);
+      setValue('longitude', updateLatLang.longitude);
+    }
+  }, [setValue, updateLatLang]);
+
+  const mapRender = () => {};
+
   // const geoData: MapData[] | undefined = useMemo(
   //   () =>
   //     obj?.map((item) => ({
@@ -144,6 +171,7 @@ const CommunityEditForm = ({ community }: Props) => {
                   sm: 'repeat(2, 1fr)',
                   lg: 'repeat(3, 1fr)',
                 }}
+                sx={{ m: 1 }}
               >
                 <RHFTextField name="name" label="Name" />
 
@@ -183,22 +211,19 @@ const CommunityEditForm = ({ community }: Props) => {
                   sm: 'repeat(2, 1fr)',
                   lg: 'repeat(2, 1fr)',
                 }}
+                sx={{ m: 1 }}
               >
                 {/* <RHFTextField name="description" label="Description" multiline sx={{gridColumn: 'span 3'}} rows={13} /> */}
                 {/* <MapView geoData={arr} /> */}
-                <RHFTextField
-                  name="latitude"
-                  label="Longitude"
-                  InputLabelProps={{ shrink: true }}
-                />
+                <RHFTextField name="latitude" label="Latitude" InputLabelProps={{ shrink: true }} />
                 <RHFTextField
                   name="longitude"
-                  label="Latitude"
+                  label="Longitude"
                   InputLabelProps={{ shrink: true }}
                 />
               </Box>
               {/* @ts-ignore */}
-              <MapView geoData={obj} />
+              <MapView geoData={latLang} onDataChange={getUpdateLatLang} />
             </Card>
             <Stack alignItems="flex-end">
               <LoadingButton type="submit" variant="outlined" color="success" loading={isLoading}>

@@ -50,7 +50,7 @@ const CommunityAddForm: React.FC = ({ currentCommunity }: Props) => {
       setCountries(countryOptions);
     });
   }, []);
-  const { error, isLoading, mutate } = useCreateCommunities();
+  const { isSuccess, error, isLoading, mutate } = useCreateCommunities();
   const { categories } = useCategory();
 
   const NewCommunitySchema = Yup.object().shape({
@@ -98,13 +98,13 @@ const CommunityAddForm: React.FC = ({ currentCommunity }: Props) => {
   const onSubmit = useCallback(
     (data: ICommunityTableAddValue) => {
       mutate(data);
-      if (!error) {
+      if (isSuccess) {
         push(paths.dashboard.general.community.edit(getValues('address')));
       }
       communityAddModal.onFalse();
     },
     // mutate(data)
-    [communityAddModal, error, getValues, mutate, push]
+    [communityAddModal, isSuccess, getValues, mutate, push]
   );
 
   const handletoAddcommunity = useCallback(async () => {

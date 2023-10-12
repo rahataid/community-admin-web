@@ -95,11 +95,9 @@ const CommunityAddForm: React.FC = () => {
               endIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
               color="error"
               onClick={() => handleModalToDeleteRow(community?.address)}
-
             >
-             Delete
+              Delete
             </Button>
-
           </Tooltip>
         }
       />
