@@ -22,7 +22,6 @@ type Props = {
 };
 
 function ControlPanel({ longitude, latitude, events = {} }: Props) {
-  console.log(longitude);
   return (
     <StyledControlPanel>
       {EVENT_NAMES.map((event) => {
@@ -31,11 +30,11 @@ function ControlPanel({ longitude, latitude, events = {} }: Props) {
           <div key={event}>
             {lngLat ? (
               <Typography variant="subtitle2" sx={{ color: 'primary.main' }}>
-                {`${round5(lngLat.lng)}, ${round5(lngLat.lat)}`}
+                {` ${round5(lngLat.lat)},${round5(lngLat.lng)}`}
               </Typography>
             ) : (
               <Typography variant="body2" component="em" sx={{ color: 'error.main' }}>
-                {`${longitude}, ${latitude}`}
+                {` ${latitude} ,${longitude}`}
               </Typography>
             )}
           </div>

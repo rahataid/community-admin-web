@@ -2,6 +2,7 @@
 
 import { styled } from '@mui/material/styles';
 import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
 import { MAPBOX_TOKEN } from 'src/config-global';
 
 const MapDraggableMarkers = dynamic(() => import('./draggable-markers'));
@@ -38,14 +39,32 @@ type latlang = {
 };
 type MapViewProps = {
   geoData: latlang;
+  onDataChange: (data) => {};
+  onChange: (data) => {};
 };
 
-export default function MapView({ geoData }: MapViewProps) {
-  console.log(geoData);
+export default function MapView({ geoData, onDataChange, onChange }: MapViewProps) {
+  const [dataFromChild, setDataFromChild] = useState('');
+
+  // Callback function to receive data from the child
+  const handleChildData = (data: any) => {
+    setDataFromChild(data);
+  };
+
+  useEffect(() => {
+    onDataChange(dataFromChild);
+  }, [dataFromChild, onDataChange]);
+
   return (
     <StyledMapContainer>
       {/* @ts-ignore */}
-      <MapDraggableMarkers {...baseSettings} mapStyle={THEMES.light} geoData={geoData} />
+      <MapDraggableMarkers
+        {...baseSettings}
+        mapStyle={THEMES.light}
+        latitude={geoData.latitude}
+        longitude={geoData.longitude}
+        onDataUpdate={handleChildData}
+      />
     </StyledMapContainer>
   );
 }

@@ -1,4 +1,3 @@
-// import FormProvider from "@components/hook-form/form-provider";
 // import { yupResolver } from '@hookform/resolvers/yup';
 // import { Alert, AlertTitle, Grid } from "@mui/material";
 // import { Stack } from "@mui/system";
@@ -9,7 +8,7 @@
 
 'use client';
 
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 // @mui
@@ -40,13 +39,18 @@ const CommunityEditForm = ({ community }: Props) => {
 
   const { isLoading, mutate } = useEditCommunity(address);
   const { categories } = useCategory();
+  const [latLang, setLatLang] = useState({
+    latitude: 0,
+    longitude: 0,
+  });
+  const [updateLatLang, setUpdateLatLang] = useState();
 
   // const { community } = useCommunity(address);
   const NewCommunitySchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     country: Yup.string(),
-    latitude: Yup.number(),
-    longitude: Yup.number(),
+    latitude: Yup.number().moreThan(-90),
+    longitude: Yup.number().lessThan(90),
     fundRaisedUsd: Yup.number(),
     fundRaisedLocal: Yup.string(),
     localCurrency: Yup.string(),
@@ -98,10 +102,6 @@ const CommunityEditForm = ({ community }: Props) => {
     }
   }, [defaultValues, community, setValue]);
 
-  // const onSubmit = useCallback(
-  //   (data: ICommunityTableFilterValue) => console.log(data),
-  //   [mutate]
-  // );
   const onSubmit = useCallback(
     (data) => {
       mutate(data);
@@ -109,26 +109,27 @@ const CommunityEditForm = ({ community }: Props) => {
     [mutate]
   );
 
-  const obj = { latitude: getValues('latitude'), longitude: getValues('longitude') };
-  // const geoData: MapData[] | undefined = useMemo(
-  //   () =>
-  //     obj?.map((item) => ({
-  //       type: 'Feature',
-  //       geometry: {
-  //         type: 'Point',
-  //         coordinates: [item?.latitude, item?.longitude],
-  //       },
-  //       properties: {
-  //         // cluster: true,
-  //         // id: `long${item?.longitude}-lat${item?.latitude}`,
-  //         latitude: item?.latitude,
-  //         longitude: item?.longitude,
-  //       },
-  //     })) || [],
-  //   [obj]
-  // );
+  // const obj = { latitude: getValues('latitude'), longitude: getValues('longitude') };
+  useEffect(() => {
+    if (community) {
+      setLatLang({
+        latitude: getValues('latitude'),
+        longitude: getValues('longitude'),
+      });
+    }
+  }, [community, getValues]);
 
-  // console.log(geoData);
+  const getUpdateLatLang = (data: any) => {
+    setUpdateLatLang(data);
+  };
+
+  useEffect(() => {
+    if (updateLatLang) {
+      setValue('latitude', updateLatLang.latitude);
+      setValue('longitude', updateLatLang.longitude);
+    }
+  }, [setValue, updateLatLang]);
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
@@ -144,6 +145,7 @@ const CommunityEditForm = ({ community }: Props) => {
                   sm: 'repeat(2, 1fr)',
                   lg: 'repeat(3, 1fr)',
                 }}
+                sx={{ m: 1 }}
               >
                 <RHFTextField name="name" label="Name" />
 
@@ -183,22 +185,18 @@ const CommunityEditForm = ({ community }: Props) => {
                   sm: 'repeat(2, 1fr)',
                   lg: 'repeat(2, 1fr)',
                 }}
+                sx={{ m: 1 }}
               >
-                {/* <RHFTextField name="description" label="Description" multiline sx={{gridColumn: 'span 3'}} rows={13} /> */}
-                {/* <MapView geoData={arr} /> */}
-                <RHFTextField
-                  name="latitude"
-                  label="Longitude"
-                  InputLabelProps={{ shrink: true }}
-                />
+                <RHFTextField name="latitude" label="Latitude" InputLabelProps={{ shrink: true }} />
                 <RHFTextField
                   name="longitude"
-                  label="Latitude"
+                  label="Longitude"
                   InputLabelProps={{ shrink: true }}
                 />
               </Box>
               {/* @ts-ignore */}
-              <MapView geoData={obj} />
+
+              <MapView geoData={latLang} onDataChange={getUpdateLatLang} />
             </Card>
             <Stack alignItems="flex-end">
               <LoadingButton type="submit" variant="outlined" color="success" loading={isLoading}>
