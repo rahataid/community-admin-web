@@ -6,8 +6,7 @@ import { useEffect, useState } from 'react';
 import { MAPBOX_TOKEN } from 'src/config-global';
 
 const MapDraggableMarkers = dynamic(() => import('./draggable-markers'));
-//@ts-ignore
-// const MapDraggableMarkers = withRouter(MapDraggableMarker);
+
 const THEMES = {
   streets: 'mapbox://styles/mapbox/streets-v11',
   outdoors: 'mapbox://styles/mapbox/outdoors-v11',

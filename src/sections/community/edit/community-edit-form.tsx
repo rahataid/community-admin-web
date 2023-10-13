@@ -1,4 +1,3 @@
-// import FormProvider from "@components/hook-form/form-provider";
 // import { yupResolver } from '@hookform/resolvers/yup';
 // import { Alert, AlertTitle, Grid } from "@mui/material";
 // import { Stack } from "@mui/system";
@@ -50,8 +49,8 @@ const CommunityEditForm = ({ community }: Props) => {
   const NewCommunitySchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     country: Yup.string(),
-    latitude: Yup.number(),
-    longitude: Yup.number(),
+    latitude: Yup.number().moreThan(-90),
+    longitude: Yup.number().lessThan(90),
     fundRaisedUsd: Yup.number(),
     fundRaisedLocal: Yup.string(),
     localCurrency: Yup.string(),
@@ -103,10 +102,6 @@ const CommunityEditForm = ({ community }: Props) => {
     }
   }, [defaultValues, community, setValue]);
 
-  // const onSubmit = useCallback(
-  //   (data: ICommunityTableFilterValue) => console.log(data),
-  //   [mutate]
-  // );
   const onSubmit = useCallback(
     (data) => {
       mutate(data);
@@ -135,27 +130,6 @@ const CommunityEditForm = ({ community }: Props) => {
     }
   }, [setValue, updateLatLang]);
 
-  const mapRender = () => {};
-
-  // const geoData: MapData[] | undefined = useMemo(
-  //   () =>
-  //     obj?.map((item) => ({
-  //       type: 'Feature',
-  //       geometry: {
-  //         type: 'Point',
-  //         coordinates: [item?.latitude, item?.longitude],
-  //       },
-  //       properties: {
-  //         // cluster: true,
-  //         // id: `long${item?.longitude}-lat${item?.latitude}`,
-  //         latitude: item?.latitude,
-  //         longitude: item?.longitude,
-  //       },
-  //     })) || [],
-  //   [obj]
-  // );
-
-  // console.log(geoData);
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
@@ -213,8 +187,6 @@ const CommunityEditForm = ({ community }: Props) => {
                 }}
                 sx={{ m: 1 }}
               >
-                {/* <RHFTextField name="description" label="Description" multiline sx={{gridColumn: 'span 3'}} rows={13} /> */}
-                {/* <MapView geoData={arr} /> */}
                 <RHFTextField name="latitude" label="Latitude" InputLabelProps={{ shrink: true }} />
                 <RHFTextField
                   name="longitude"
@@ -223,6 +195,7 @@ const CommunityEditForm = ({ community }: Props) => {
                 />
               </Box>
               {/* @ts-ignore */}
+
               <MapView geoData={latLang} onDataChange={getUpdateLatLang} />
             </Card>
             <Stack alignItems="flex-end">

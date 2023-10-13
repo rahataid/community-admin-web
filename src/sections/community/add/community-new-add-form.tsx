@@ -17,8 +17,7 @@ import { ConfirmDialog } from '@components/custom-dialog';
 import Iconify from '@components/iconify/iconify';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useBoolean } from '@hooks/use-boolean';
-import { Alert, AlertTitle, Button, MenuItem, Tooltip } from '@mui/material';
-import { paths } from '@routes/paths';
+import { Button, MenuItem, Tooltip } from '@mui/material';
 import { generateWalletAddress } from '@web3/utils';
 import axios from 'axios';
 import { useCategory } from 'src/api/category';
@@ -56,9 +55,9 @@ const CommunityAddForm: React.FC = ({ currentCommunity }: Props) => {
   const NewCommunitySchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     address: Yup.string().nullable().optional().required('WalletAddress is required'),
-    country: Yup.string().optional(),
-    categoryId: Yup.number().optional(),
-    description: Yup.string().optional(),
+    country: Yup.string().required('Country is required'),
+    categoryId: Yup.number().required('Category is required'),
+    description: Yup.string().required('Description is required'),
     localCurrency: Yup.string().optional(),
   });
 
@@ -98,18 +97,18 @@ const CommunityAddForm: React.FC = ({ currentCommunity }: Props) => {
   const onSubmit = useCallback(
     (data: ICommunityTableAddValue) => {
       mutate(data);
-      if (isSuccess) {
-        push(paths.dashboard.general.community.edit(getValues('address')));
-      }
       communityAddModal.onFalse();
     },
     // mutate(data)
-    [communityAddModal, isSuccess, getValues, mutate, push]
+    [communityAddModal, mutate]
   );
 
-  const handletoAddcommunity = useCallback(async () => {
-    communityAddModal.onTrue();
-  }, [communityAddModal]);
+  const handletoAddcommunity = useCallback(
+    async (data: ICommunityTableAddValue) => {
+      if (data) communityAddModal.onTrue();
+    },
+    [communityAddModal]
+  );
 
   return (
     <Stack>
@@ -124,12 +123,12 @@ const CommunityAddForm: React.FC = ({ currentCommunity }: Props) => {
         onClose={communityAddModal.onFalse}
       />
       <FormProvider methods={methods}>
-        {error && (
+        {/* {error && (
           <Alert severity="error">
             <AlertTitle>Error Creating Community</AlertTitle>
             {error?.message}
           </Alert>
-        )}
+        )} */}
         <Grid container spacing={3}>
           <Grid xs={12} md={12}>
             <Stack spacing={5}>

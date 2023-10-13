@@ -50,34 +50,28 @@ function MapDraggableMarkers({ latitude, longitude, onDataUpdate, ...other }: Ma
       setViewState((prev) => ({ ...prev, latitude, longitude }));
     }
   }, [latitude, longitude]);
-  // const onMove = React.useCallback(({viewState}) => {
-  //   const newCenter = [viewState.longitude, viewState.latitude];
-  //   // Only update the view state if the center is inside the geofence
-  //   if (turf.booleanPointInPolygon(newCenter, GEOFENCE)) {
-  //     setViewState(newCenter);
-  //   }
-  // }, [])
+
   return (
     <>
-      {viewState.latitude && viewState.longitude && (
+      {/* {viewState.latitude && viewState.longitude && (
         <>
-          <Map {...viewState} onMove={(evt) => setViewState(evt.viewState)} {...other}>
-            <MapControl />
-
-            <MapMarker
-              longitude={marker.longitude}
-              latitude={marker.latitude}
-              anchor="bottom"
-              draggable
-              onDragStart={onMarkerDragStart}
-              onDrag={onMarkerDrag}
-              onDragEnd={onMarkerDragEnd}
-            />
-          </Map>
-
-          {/* <ControlPanel events={events} longitude={marker.longitude} latitude={marker.latitude} /> */}
+          
+          <ControlPanel events={events} longitude={marker.longitude} latitude={marker.latitude} />
         </>
-      )}
+      )} */}
+      <Map {...viewState} onMove={(evt) => setViewState(evt.viewState)} {...other}>
+        <MapControl />
+
+        <MapMarker
+          longitude={marker.longitude}
+          latitude={marker.latitude}
+          anchor="bottom"
+          draggable
+          onDragStart={onMarkerDragStart}
+          onDrag={onMarkerDrag}
+          onDragEnd={onMarkerDragEnd}
+        />
+      </Map>
     </>
   );
 }

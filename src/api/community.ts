@@ -1,5 +1,7 @@
+import { paths } from '@routes/paths';
 import CommunityService from '@services/community';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import { useSnackbar } from 'notistack';
 import { useMemo } from 'react';
 import { IApiResponseError } from 'src/types/beneficiaries';
@@ -44,18 +46,22 @@ export function useCommunity(address: string) {
 export function useCreateCommunities() {
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
+  const { push } = useRouter();
   return useMutation<ICommunityAddDetails, IApiResponseError, ICommunityTableAddValue>(
     ['categories/create'],
     async (data: ICommunityTableAddValue) => {
       const res = await CommunityService.create(data);
+      console.log(res?.data);
       return res?.data;
     },
     {
-      onError: () => {
-        enqueueSnackbar('Error Creating Community', { variant: 'error' });
+      onError: (error) => {
+        enqueueSnackbar(error?.message, { variant: 'error' });
       },
-      onSuccess: () => {
+      onSuccess: (data) => {
+        if (data?.address) push(paths.dashboard.general.community.edit(data.address));
         enqueueSnackbar('Community Created Successfully', { variant: 'success' });
+
         queryClient.invalidateQueries(['communities']);
       },
     }
