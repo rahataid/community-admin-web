@@ -4,7 +4,7 @@ Welcome to Rahat, an open-source blockchain-based token cash and voucher assista
 
 Visit our website at [rahat.io](https://rahat.io) for more information and updates.
 
-## Documentation
+## Documentation 
 
 1. **Getting Started:** To set up and configure Rahat for your projects, follow these steps:
 
