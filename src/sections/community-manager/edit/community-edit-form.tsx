@@ -26,8 +26,7 @@ import { Box, Card, MenuItem } from '@mui/material';
 import MapView from '@sections/map-view';
 import { useCategory } from 'src/api/category';
 import { useEditCommunity } from 'src/api/community';
-import { useListManager } from 'src/api/manager';
-import FormProvider, { RHFMultiSelect, RHFSelect, RHFTextField } from 'src/components/hook-form';
+import FormProvider, { RHFSelect, RHFTextField } from 'src/components/hook-form';
 import { ICommunityTableFilterValue } from 'src/types/community';
 
 interface FormValues extends ICommunityTableFilterValue {}
@@ -45,7 +44,6 @@ const CommunityEditForm = ({ community }: Props) => {
     longitude: 0,
   });
   const [updateLatLang, setUpdateLatLang] = useState();
-  const { managers } = useListManager();
 
   // const { community } = useCommunity(address);
   const NewCommunitySchema = Yup.object().shape({
@@ -59,7 +57,6 @@ const CommunityEditForm = ({ community }: Props) => {
     category: Yup.string(),
     description: Yup.string(),
     district: Yup.string(),
-    managers: Yup.array(),
   });
 
   const defaultValues = useMemo<FormValues>(
@@ -107,12 +104,13 @@ const CommunityEditForm = ({ community }: Props) => {
   }, [defaultValues, community, setValue]);
 
   const onSubmit = useCallback(
-    async (data) => {
+    (data) => {
       mutate(data);
     },
     [mutate]
   );
 
+  // const obj = { latitude: getValues('latitude'), longitude: getValues('longitude') };
   useEffect(() => {
     if (community) {
       setLatLang({
@@ -159,24 +157,12 @@ const CommunityEditForm = ({ community }: Props) => {
                     </MenuItem>
                   ))}
                 </RHFSelect>
-
-                <RHFTextField name="district" label="District" />
-
+                <Box />
                 <RHFTextField name="localCurrency" label="Currency" />
                 <RHFTextField name="fundRaisedLocal" label="FundRaisedLocal" />
                 <RHFTextField name="fundRaisedUsd" label="FundRaisedUsd" />
+                <RHFTextField name="district" label="District" />
                 <RHFTextField name="country" label="Country" />
-                <RHFMultiSelect
-                  name="managers"
-                  label="Managers"
-                  options={managers.map((item: any) => ({
-                    value: item.id.toString(),
-                    label: item.name,
-                  }))}
-                  multiple
-                  chip
-                  checkbox
-                />
                 <RHFTextField
                   name="description"
                   label="Description"

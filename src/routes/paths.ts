@@ -14,6 +14,7 @@ const ROOTS = {
   CAMPAIGNS: '/campaigns',
   COMMUNITIES: '/communities',
   CATEGORY: '/categories',
+  MANAGER: '/communitymanager',
 };
 
 // ----------------------------------------------------------------------
@@ -44,6 +45,10 @@ export const paths = {
       category: {
         list: `${ROOTS.CATEGORY}`,
         add: `${ROOTS.CATEGORY}/add`,
+      },
+      manager: {
+        list: `${ROOTS.MANAGER}`,
+        add: `${ROOTS.MANAGER}/add`,
       },
     },
   },

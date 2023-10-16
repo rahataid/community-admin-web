@@ -5,11 +5,9 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 // @mui
 import Card from '@mui/material/Card';
 import Container from '@mui/material/Container';
-import IconButton from '@mui/material/IconButton';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
-import Tooltip from '@mui/material/Tooltip';
 // routes
 import { usePathname, useRouter, useSearchParams } from 'src/routes/hook';
 import { paths } from 'src/routes/paths';
@@ -21,29 +19,39 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 import { useSettingsContext } from 'src/components/settings';
-import { TableHeadCustom, TableNoData, TableSelectedAction, useTable } from 'src/components/table';
+import {
+  TableEmptyRows,
+  TableHeadCustom,
+  TableNoData,
+  TablePaginationCustom,
+  TableSelectedAction,
+  emptyRows,
+  useTable,
+} from 'src/components/table';
 // types
 //
-import { Button } from '@mui/material';
+import { Button, IconButton, Tooltip } from '@mui/material';
 import { RouterLink } from '@routes/components';
+import { useSnackbar } from 'notistack';
 // import { useUsers } from 'src/api/administration';
-import { useCategory } from 'src/api/category';
-import { ICategoryItem, ICommunityApiFilters } from 'src/types/community';
-import CAtegoryTableRow from './category-table-row';
+import { useListManager } from 'src/api/manager';
+import { ICommunityApiFilters, ICommunityManagerItem } from 'src/types/community';
+import CommunityManagerTableRow from './communityManager-table-row';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', width: 200 },
-  { id: 'action', label: 'Actions', width: 150 },
+  { id: 'email', label: 'Email', width: 150 },
+  { id: 'phone', label: 'Phone', width: 150 },
   { id: '', width: 20 },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function CategoriesListView() {
+export default function CommunityManageListView() {
   const table = useTable();
-  const { categories } = useCategory();
+  const { enqueueSnackbar } = useSnackbar();
 
   const defaultFilters: ICommunityApiFilters = useMemo(
     () => ({
@@ -59,10 +67,20 @@ export default function CategoriesListView() {
     [table.order, table.orderBy, table.page, table.rowsPerPage]
   );
   const [filters, setFilters] = useState(defaultFilters);
+  const { managers, meta } = useListManager(filters);
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
   const { push } = useRouter();
+
+  const createQueryString = useCallback((params: Record<string, string | number | boolean>) => {
+    const queryParams = Object.entries(params)
+      .filter(([_, value]) => Boolean(value))
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join('&');
+
+    return queryParams === '' ? '' : `${queryParams}`;
+  }, []);
 
   const settings = useSettingsContext();
 
@@ -72,12 +90,7 @@ export default function CategoriesListView() {
 
   const canReset = !isEqual(defaultFilters, filters);
 
-  const notFound = (!categories.length && canReset) || !categories.length;
-
-  const handleResetFilters = useCallback(() => {
-    setFilters(defaultFilters);
-    push(pathname);
-  }, [push, defaultFilters, pathname]);
+  const notFound = (!managers.length && canReset) || !managers.length;
 
   useEffect(() => {
     const searchFilters: ICommunityApiFilters = {
@@ -90,7 +103,7 @@ export default function CategoriesListView() {
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <CustomBreadcrumbs
-        heading="Category: List"
+        heading="Manager: List"
         links={[{ name: 'Dashboard', href: paths.dashboard.root }, { name: 'List' }]}
         sx={{
           mb: { xs: 3, md: 5 },
@@ -98,12 +111,12 @@ export default function CategoriesListView() {
         action={
           <Button
             component={RouterLink}
-            href={paths.dashboard.general.category.add}
+            href={paths.dashboard.general.manager.add}
             variant="outlined"
             startIcon={<Iconify icon="mingcute:add-line" />}
             color="success"
           >
-            Add Category
+            Add Manager
           </Button>
         }
       />
@@ -112,11 +125,11 @@ export default function CategoriesListView() {
           <TableSelectedAction
             dense={table.dense}
             numSelected={table.selected.length}
-            rowCount={categories.length}
+            rowCount={managers.length}
             onSelectAllRows={(checked) =>
               table.onSelectAllRows(
                 checked,
-                categories.map((row: ICategoryItem) => row.name.toString())
+                managers.map((row: ICommunityManagerItem) => row.name.toString())
               )
             }
             action={
@@ -134,24 +147,20 @@ export default function CategoriesListView() {
                 order={table.order}
                 orderBy={table.orderBy}
                 headLabel={TABLE_HEAD}
-                rowCount={categories.length}
+                rowCount={managers.length}
                 numSelected={table.selected.length}
                 onSort={table.onSort}
               />
 
               <TableBody>
-                {categories.map((row: ICategoryItem) => (
-                  <CAtegoryTableRow
-                    key={row.id}
-                    row={row}
-                    // onViewRow={() => handleViewRow(row)}
-                  />
+                {managers.map((row: ICommunityManagerItem) => (
+                  <CommunityManagerTableRow key={row.id} row={row} />
                 ))}
 
-                {/* <TableEmptyRows
+                <TableEmptyRows
                   height={denseHeight}
                   emptyRows={emptyRows(table?.page, table?.rowsPerPage, meta?.total || 0)}
-                /> */}
+                />
 
                 <TableNoData notFound={notFound} />
               </TableBody>
@@ -159,16 +168,15 @@ export default function CategoriesListView() {
           </Scrollbar>
         </TableContainer>
 
-        {/* <TablePaginationCustom
+        <TablePaginationCustom
           count={meta?.total || 0}
           page={table.page}
           rowsPerPage={table?.rowsPerPage}
           onPageChange={table.onChangePage}
           onRowsPerPageChange={table.onChangeRowsPerPage}
-          //
           dense={table.dense}
           onChangeDense={table.onChangeDense}
-        /> */}
+        />
       </Card>
     </Container>
   );
