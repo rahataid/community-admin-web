@@ -69,7 +69,7 @@ export function useUpdateManager() {
       },
       onSuccess: (data) => {
         //   if (data?.address) push(paths.dashboard.general.community.edit(data.address));
-        enqueueSnackbar('Created Succesfully', { variant: 'success' });
+        enqueueSnackbar('Manager Updated Succesfully', { variant: 'success' });
       },
     }
   );
