@@ -8,7 +8,7 @@
 
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 // @mui
@@ -27,7 +27,7 @@ import MapView from '@sections/map-view';
 import { useCategory } from 'src/api/category';
 import { useEditCommunity } from 'src/api/community';
 import { useListManager } from 'src/api/manager';
-import FormProvider, { RHFMultiSelect, RHFSelect, RHFTextField } from 'src/components/hook-form';
+import FormProvider, { RHFSelect, RHFTextField } from 'src/components/hook-form';
 import { ICommunityTableFilterValue } from 'src/types/community';
 
 interface FormValues extends ICommunityTableFilterValue {}
@@ -51,8 +51,8 @@ const CommunityEditForm = ({ community }: Props) => {
   const NewCommunitySchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     country: Yup.string(),
-    latitude: Yup.number().moreThan(-90),
-    longitude: Yup.number().lessThan(90),
+    latitude: Yup.number().moreThan(-90).lessThan(90),
+    longitude: Yup.number().lessThan(90).moreThan(-90),
     fundRaisedUsd: Yup.number(),
     fundRaisedLocal: Yup.string(),
     localCurrency: Yup.string(),
@@ -84,7 +84,7 @@ const CommunityEditForm = ({ community }: Props) => {
     defaultValues,
   });
 
-  const { handleSubmit, setValue, getValues } = methods;
+  const { handleSubmit, setValue, getValues, watch } = methods;
   useEffect(() => {
     if (community) {
       const defaultValuesKeys = Object.keys(defaultValues) as (keyof FormValues)[];
@@ -133,6 +133,15 @@ const CommunityEditForm = ({ community }: Props) => {
     }
   }, [setValue, updateLatLang]);
 
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    // const trimmedValue = value.trim();
+    const namesArray = value
+      .split(',')
+      .map((name: string) => name.charAt(0).toUpperCase() + name.slice(1));
+
+    setValue('managers', namesArray);
+  };
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
@@ -153,7 +162,7 @@ const CommunityEditForm = ({ community }: Props) => {
                 <RHFTextField name="name" label="Name" />
 
                 <RHFSelect name="categoryId" label="Category">
-                  {categories.map((category) => (
+                  {categories?.map((category) => (
                     <MenuItem key={category.id} value={category.id}>
                       {category.name}
                     </MenuItem>
@@ -166,17 +175,19 @@ const CommunityEditForm = ({ community }: Props) => {
                 <RHFTextField name="fundRaisedLocal" label="FundRaisedLocal" />
                 <RHFTextField name="fundRaisedUsd" label="FundRaisedUsd" />
                 <RHFTextField name="country" label="Country" />
-                <RHFMultiSelect
+                {/* <RHFMultiSelect
                   name="managers"
                   label="Managers"
-                  options={managers.map((item: any) => ({
+                  options={managers?.map((item: any) => ({
                     value: item.id.toString(),
                     label: item.name,
                   }))}
                   multiple
                   chip
                   checkbox
-                />
+                /> */}
+
+                <RHFTextField name="managers" label="Managers" onChange={handleChange} />
                 <RHFTextField
                   name="description"
                   label="Description"

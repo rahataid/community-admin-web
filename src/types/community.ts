@@ -87,8 +87,8 @@ export interface ICommunityManagerDetails {
 }
 
 export type ICommunityManagerUpdateValue = {
-  id: String;
-  communityName: string;
+  id: number;
+  communityName: string[];
 };
 export interface ICommunityManagerUpdateDetails {
   id: number;
