@@ -47,12 +47,12 @@ export function useNavData() {
             icon: ICONS.category,
             show: true,
           },
-          {
-            title: 'Managers',
-            path: paths.dashboard.general.manager.list,
-            icon: ICONS.manager,
-            show: true,
-          },
+          // {
+          //   title: 'Managers',
+          //   path: paths.dashboard.general.manager.list,
+          //   icon: ICONS.manager,
+          //   show: true,
+          // },
         ],
       },
 

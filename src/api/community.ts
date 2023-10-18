@@ -11,7 +11,6 @@ import {
   ICommunityListHookReturn,
   ICommunityTableAddValue,
 } from 'src/types/community';
-import { useUpdateManager } from './manager';
 
 export function useCommunities(params?: ICommunityApiFilters): ICommunityListHookReturn {
   const { data, isLoading, error } = useQuery(['communities', params], async () => {
@@ -105,12 +104,12 @@ export function useGetMultipleImageAssets(params: string) {
 export function useEditCommunity(address: string) {
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
-  const updateManager = useUpdateManager();
+  // const updateManager = useUpdateManager();
   return useMutation(
     ['community/edit'],
     async (data) => {
+      console.log(data);
       const res = await CommunityService.editCommunity(address, data);
-      console.log(res);
       return res?.data;
     },
     {
@@ -118,14 +117,14 @@ export function useEditCommunity(address: string) {
         enqueueSnackbar('Error Updating Community Data', { variant: 'error' });
       },
       onSuccess: (data) => {
-        const managerIds = data?.managers;
+        // const managerIds = data?.managers;
         enqueueSnackbar('Community Data Edited Successfully', { variant: 'success' });
-        managerIds.forEach((id) => {
-          updateManager.mutate({
-            id,
-            communityName: data?.name,
-          });
-        });
+        // managerIds.forEach((id) => {
+        //   updateManager.mutate({
+        //     id: Number(id),
+        //     communityName: data?.name,
+        //   });
+        // });
         queryClient.invalidateQueries(['communities']);
       },
     }
