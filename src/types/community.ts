@@ -58,6 +58,7 @@ export type ICommunityTableFilterValue = {
   fundRaisedLocal: string;
   localCurrency: string;
   description: string;
+  managers: String[];
 };
 
 export type ICommunityTableAddValue = {
@@ -71,6 +72,39 @@ export type ICommunityApiFilter = {
   data: any;
 };
 
+export type ICommunityManagerAddValue = {
+  name: string;
+  email: string;
+  phone: string;
+  walletAddress: string;
+};
+
+export interface ICommunityManagerDetails {
+  name: string;
+  email: string;
+  phone: string;
+  walletAddress: string;
+}
+
+export type ICommunityManagerUpdateValue = {
+  id: String;
+  communityName: string;
+};
+export interface ICommunityManagerUpdateDetails {
+  id: number;
+  communityName: string[];
+}
+
+export type ICommunityManagerItem = {
+  id: number;
+  walletAddress?: string;
+  name: string;
+  email: string;
+  phone: string;
+  communities: [];
+  updatedAt: string;
+  deletedAt: string;
+};
 export interface ICommunityDetails {
   name: string;
   walletAddress?: string;
