@@ -15,7 +15,7 @@ export const FLICKR_PHOTOSET = process.env.NEXT_PUBLIC_FLICKR_PHOTOSET;
 export const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
 export const MAPBOX_API = process.env.NEXT_PUBLIC_MAPBOX_API;
-export const STAGE_ENV = process.env.NEXT_PUBLIC_STAGE;
+export const AWS_ROOT_FOLDER_NAME = process.env.NEXT_PUBLIC_AWS_ROOT_FOLDER_NAME;
 
 // ROOT PATH AFTER LOGIN SUCCESSFUL
 export const PATH_AFTER_LOGIN = paths.dashboard.root; // as '/dashboard'

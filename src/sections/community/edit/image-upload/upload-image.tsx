@@ -10,7 +10,7 @@ import Stack from '@mui/material/Stack';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // components
-import { STAGE_ENV } from '@config';
+import { AWS_ROOT_FOLDER_NAME } from '@config';
 import { Alert, Grid } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import { Upload } from 'src/components/upload';
@@ -79,17 +79,13 @@ export default function UploadImage({
 
   useEffect(() => {
     setFile(
-      `https://rahat-rumsan.s3.us-east-1.amazonaws.com/${STAGE_ENV ? 'development' : 'community'}/${
-        community?.name
-      }/${community?.images?.cover}`
+      `https://rahat-rumsan.s3.us-east-1.amazonaws.com/${AWS_ROOT_FOLDER_NAME}/${community?.name}/${community?.images?.cover}`
     );
 
     const galleryUrls =
       community?.images?.gallery?.map(
         (gal) =>
-          `https://rahat-rumsan.s3.us-east-1.amazonaws.com/${
-            STAGE_ENV ? 'development' : 'community'
-          }/${community?.name}/${gal}`
+          `https://rahat-rumsan.s3.us-east-1.amazonaws.com/${AWS_ROOT_FOLDER_NAME}/${community?.name}/${gal}`
       ) || [];
     setFiles(galleryUrls);
   }, [community]);
