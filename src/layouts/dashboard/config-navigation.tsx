@@ -13,7 +13,8 @@ const icon = (name: string) => <Iconify icon={name} />;
 const ICONS = {
   dashboard: icon('material-symbols:dashboard-outline-rounded'),
   community: icon('fluent:people-community-24-filled'),
-  category: icon('carbon:category')
+  category: icon('carbon:category'),
+  manager: icon('ion:people-sharp'),
 };
 
 // ----------------------------------------------------------------------
@@ -41,11 +42,17 @@ export function useNavData() {
             show: true,
           },
           {
-            title:'Category',
-            path:paths.dashboard.general.category.list,
+            title: 'Category',
+            path: paths.dashboard.general.category.list,
             icon: ICONS.category,
             show: true,
-          }
+          },
+          // {
+          //   title: 'Managers',
+          //   path: paths.dashboard.general.manager.list,
+          //   icon: ICONS.manager,
+          //   show: true,
+          // },
         ],
       },
 

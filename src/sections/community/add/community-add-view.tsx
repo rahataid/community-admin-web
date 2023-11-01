@@ -8,6 +8,7 @@ import UserAddForm from './community-new-add-form';
 
 const UserAddView = () => {
   const settings = useSettingsContext();
+
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <CustomBreadcrumbs

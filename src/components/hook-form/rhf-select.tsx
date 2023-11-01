@@ -91,7 +91,7 @@ export function RHFMultiSelect({
   placeholder,
   helperText,
   sx,
-  multiple=false,
+  multiple,
   ...other
 }: RHFMultiSelectProps) {
   const { control } = useFormContext();
@@ -109,7 +109,7 @@ export function RHFMultiSelect({
 
     if (chip) {
       return (
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.4, fontSize: 20 }}>
           {selectedItems.map((item) => (
             <Chip key={item.value} size="small" label={item.label} />
           ))}
@@ -130,7 +130,7 @@ export function RHFMultiSelect({
 
           <Select
             {...field}
-            multiple={multiple}
+            multiple={!!multiple}
             displayEmpty={!!placeholder}
             labelId={name}
             input={<OutlinedInput fullWidth label={label} error={!!error} />}

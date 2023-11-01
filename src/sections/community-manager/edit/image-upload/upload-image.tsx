@@ -10,7 +10,6 @@ import Stack from '@mui/material/Stack';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // components
-import { AWS_ROOT_FOLDER_NAME } from '@config';
 import { Alert, Grid } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import { Upload } from 'src/components/upload';
@@ -22,7 +21,7 @@ type UploadImageProps = {
   handleUploadMultiple: (files: File[]) => void;
   error?: string;
   isUploading: boolean;
-  community: any;
+  community:any
 };
 
 export default function UploadImage({
@@ -30,7 +29,7 @@ export default function UploadImage({
   handleUploadMultiple,
   error,
   isUploading,
-  community,
+  community
 }: UploadImageProps) {
   const preview = useBoolean();
   const [files, setFiles] = useState<(File | string)[]>([]);
@@ -77,23 +76,23 @@ export default function UploadImage({
     handleCoverUpload(file);
   };
 
-  useEffect(() => {
-    setFile(
-      `https://rahat-rumsan.s3.us-east-1.amazonaws.com/${AWS_ROOT_FOLDER_NAME}/${community?.name}/${community?.images?.cover}`
-    );
 
-    const galleryUrls =
-      community?.images?.gallery?.map(
-        (gal) =>
-          `https://rahat-rumsan.s3.us-east-1.amazonaws.com/${AWS_ROOT_FOLDER_NAME}/${community?.name}/${gal}`
-      ) || [];
-    setFiles(galleryUrls);
-  }, [community]);
+ useEffect(() => {
+    setFile(`https://rahat-rumsan.s3.us-east-1.amazonaws.com/community/${community?.name}/${community?.images?.cover}`);
+
+
+   const galleryUrls = community?.images?.gallery?.map(gal => `https://rahat-rumsan.s3.us-east-1.amazonaws.com/community/${community?.name}/${gal}`) || [];
+   setFiles(galleryUrls);
+
+
+ }, [community])
+ 
 
   return (
     <Grid sx={{ my: 5 }}>
       <Stack spacing={5}>
-        <Card>
+
+      <Card>
           <CardHeader title="Upload Cover Photo" />
           <CardContent>
             {error && (
@@ -113,6 +112,7 @@ export default function UploadImage({
             />
           </CardContent>
         </Card>
+
 
         <Card>
           {/* <CardHeader
@@ -136,6 +136,8 @@ export default function UploadImage({
             />
           </CardContent>
         </Card>
+
+       
       </Stack>
     </Grid>
   );

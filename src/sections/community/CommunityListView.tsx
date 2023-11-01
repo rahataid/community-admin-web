@@ -109,9 +109,6 @@ export default function CommunitiesListView() {
     [push]
   );
 
-
-
-
   useEffect(() => {
     const searchFilters: ICommunityApiFilters = {
       ...defaultFilters,
@@ -121,8 +118,7 @@ export default function CommunitiesListView() {
   }, [searchParams, table.order, table.orderBy, table.page, table.rowsPerPage, defaultFilters]);
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-
+    <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <CustomBreadcrumbs
         heading="Community: List"
         links={[{ name: 'Dashboard', href: paths.dashboard.root }, { name: 'List' }]}

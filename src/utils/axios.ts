@@ -73,12 +73,12 @@ export const endpoints = {
     list: '/communities',
     details: (address: string) => `/communities/${address}`,
     create: '/communities',
-    editCommunity: (address:string)=>`/communities/${address}/edit`,
-    deleteCommunity: (address:string)=>`/communities/${address}/delete`,
+    editCommunity: (address: string) => `/communities/${address}/edit`,
+    deleteCommunity: (address: string) => `/communities/${address}/delete`,
     updateMultipleAssets: (id: string, key: string) =>
       `communities/${id}/upload-asset/${key}/multiple`,
     uploadAssets: (id: string, key: string) => `/communities/${id}/upload-asset/${key}`,
-    getMultipleAsset:(address:string)=>`/communities/${address}/images`
+    getMultipleAsset: (address: string) => `/communities/${address}/images`,
   },
   category: {
     create: '/categories',
@@ -89,5 +89,10 @@ export const endpoints = {
       count: '/reports/dashboard/summary',
     },
     byContractAddress: (address: string) => `/reports/project/${address}`,
+  },
+  manager: {
+    create: 'managers/add',
+    list: 'managers/list',
+    update: 'managers/update',
   },
 };

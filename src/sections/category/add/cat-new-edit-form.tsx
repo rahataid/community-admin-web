@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 // @mui
 import LoadingButton from '@mui/lab/LoadingButton';
-import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -13,6 +12,10 @@ import Grid from '@mui/material/Unstable_Grid2';
 // types
 // assets
 // components
+import CustomBreadcrumbs from '@components/custom-breadcrumbs/custom-breadcrumbs';
+import { useSettingsContext } from '@components/settings';
+import { Container } from '@mui/material';
+import { paths } from '@routes/paths';
 import { useCategoryCreate } from 'src/api/category';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import { ICategoryTableFilterValue } from 'src/types/community';
@@ -25,6 +28,7 @@ interface FormValues extends ICategoryTableFilterValue {}
 
 const CategoryAddForm: React.FC = ({ currentCategory }: Props) => {
   const createCategory = useCategoryCreate();
+  const settings = useSettingsContext();
 
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -45,41 +49,53 @@ const CategoryAddForm: React.FC = ({ currentCategory }: Props) => {
   const { reset, handleSubmit } = methods;
 
   // const onSubmit = useCallback((data: IUserTableFilters) => mutate(data), [mutate]);
-  const onSubmit = useCallback((data: ICategoryTableFilterValue) => {
-    console.log(data)
-    createCategory.mutate(data)
-    reset()}
-  , [createCategory.mutate, reset]);
-
+  const onSubmit = useCallback(
+    (data: ICategoryTableFilterValue) => {
+      console.log(data);
+      createCategory.mutate(data);
+      reset();
+    },
+    [createCategory, reset]
+  );
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={3}>
-        <Grid xs={12} md={12}>
-          <Card sx={{ p: 3 }}>
-            <Box
-              rowGap={3}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-              }}
-            >
-              <RHFTextField name="name" label="Name" />
+    <Container maxWidth={settings.themeStretch ? false : 'xl'}>
+      <CustomBreadcrumbs
+        heading="Category: Add"
+        links={[
+          { name: 'Dashboard', href: paths.dashboard.root },
+          { name: 'Categories', href: paths.dashboard.general.category.list },
+          { name: 'Add' },
+        ]}
+        sx={{
+          mb: { xs: 3, md: 5 },
+        }}
+      />
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <Grid container spacing={3}>
+          <Grid xs={12} md={12}>
+            <Card sx={{ p: 3, m: 3 }}>
+              <RHFTextField
+                name="name"
+                label="Category"
+                sx={{ display: 'flex', justifyContent: 'center' }}
+              />
 
-
-            </Box>
-
-            <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="outlined" color="success" loading={createCategory.isLoading}>
-                Create Category
-              </LoadingButton>
-            </Stack>
-          </Card>
+              <Stack alignItems="flex-end" sx={{ mt: 3 }}>
+                <LoadingButton
+                  type="submit"
+                  variant="outlined"
+                  color="success"
+                  loading={createCategory.isLoading}
+                >
+                  Add
+                </LoadingButton>
+              </Stack>
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
-    </FormProvider>
+      </FormProvider>
+    </Container>
   );
 };
 

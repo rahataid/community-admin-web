@@ -8,7 +8,7 @@
 
 'use client';
 
-import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 // @mui
@@ -26,7 +26,6 @@ import { Box, Card, MenuItem } from '@mui/material';
 import MapView from '@sections/map-view';
 import { useCategory } from 'src/api/category';
 import { useEditCommunity } from 'src/api/community';
-import { useListManager } from 'src/api/manager';
 import FormProvider, { RHFSelect, RHFTextField } from 'src/components/hook-form';
 import { ICommunityTableFilterValue } from 'src/types/community';
 
@@ -45,21 +44,19 @@ const CommunityEditForm = ({ community }: Props) => {
     longitude: 0,
   });
   const [updateLatLang, setUpdateLatLang] = useState();
-  const { managers } = useListManager();
 
   // const { community } = useCommunity(address);
   const NewCommunitySchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     country: Yup.string(),
-    latitude: Yup.number().moreThan(-90).lessThan(90),
-    longitude: Yup.number().lessThan(90).moreThan(-90),
+    latitude: Yup.number().moreThan(-90),
+    longitude: Yup.number().lessThan(90),
     fundRaisedUsd: Yup.number(),
     fundRaisedLocal: Yup.string(),
     localCurrency: Yup.string(),
     category: Yup.string(),
     description: Yup.string(),
     district: Yup.string(),
-    managers: Yup.array(),
   });
 
   const defaultValues = useMemo<FormValues>(
@@ -84,7 +81,7 @@ const CommunityEditForm = ({ community }: Props) => {
     defaultValues,
   });
 
-  const { handleSubmit, setValue, getValues, watch } = methods;
+  const { handleSubmit, setValue, getValues } = methods;
   useEffect(() => {
     if (community) {
       const defaultValuesKeys = Object.keys(defaultValues) as (keyof FormValues)[];
@@ -107,12 +104,13 @@ const CommunityEditForm = ({ community }: Props) => {
   }, [defaultValues, community, setValue]);
 
   const onSubmit = useCallback(
-    async (data) => {
+    (data) => {
       mutate(data);
     },
     [mutate]
   );
 
+  // const obj = { latitude: getValues('latitude'), longitude: getValues('longitude') };
   useEffect(() => {
     if (community) {
       setLatLang({
@@ -133,15 +131,6 @@ const CommunityEditForm = ({ community }: Props) => {
     }
   }, [setValue, updateLatLang]);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    // const trimmedValue = value.trim();
-    const namesArray = value
-      .split(',')
-      .map((name: string) => name.charAt(0).toUpperCase() + name.slice(1));
-
-    setValue('managers', namesArray);
-  };
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
@@ -162,32 +151,18 @@ const CommunityEditForm = ({ community }: Props) => {
                 <RHFTextField name="name" label="Name" />
 
                 <RHFSelect name="categoryId" label="Category">
-                  {categories?.map((category) => (
+                  {categories.map((category) => (
                     <MenuItem key={category.id} value={category.id}>
                       {category.name}
                     </MenuItem>
                   ))}
                 </RHFSelect>
-
-                <RHFTextField name="district" label="District" />
-
+                <Box />
                 <RHFTextField name="localCurrency" label="Currency" />
                 <RHFTextField name="fundRaisedLocal" label="FundRaisedLocal" />
                 <RHFTextField name="fundRaisedUsd" label="FundRaisedUsd" />
+                <RHFTextField name="district" label="District" />
                 <RHFTextField name="country" label="Country" />
-                {/* <RHFMultiSelect
-                  name="managers"
-                  label="Managers"
-                  options={managers?.map((item: any) => ({
-                    value: item.id.toString(),
-                    label: item.name,
-                  }))}
-                  multiple
-                  chip
-                  checkbox
-                /> */}
-
-                <RHFTextField name="managers" label="Managers" onChange={handleChange} />
                 <RHFTextField
                   name="description"
                   label="Description"
