@@ -60,6 +60,8 @@ const CommunityEditForm = ({ community }: Props) => {
     description: Yup.string(),
     district: Yup.string(),
     managers: Yup.array(),
+    summary: Yup.array(),
+    beneficiaries: Yup.number(),
   });
 
   const defaultValues = useMemo<FormValues>(
@@ -75,6 +77,8 @@ const CommunityEditForm = ({ community }: Props) => {
       description: '',
       district: '',
       managers: [],
+      summary: [],
+      beneficiaries: 0,
     }),
     []
   );
@@ -86,6 +90,7 @@ const CommunityEditForm = ({ community }: Props) => {
 
   const { handleSubmit, setValue, getValues, watch } = methods;
   useEffect(() => {
+    console.log(community);
     if (community) {
       const defaultValuesKeys = Object.keys(defaultValues) as (keyof FormValues)[];
       const communityKeys = Object.keys(community) as (keyof FormValues)[];
@@ -142,6 +147,17 @@ const CommunityEditForm = ({ community }: Props) => {
 
     setValue('managers', namesArray);
   };
+
+  useEffect(() => {
+    if (community) {
+      const summary = getValues('summary');
+      summary.reduce((acc, item) => {
+        acc[item.id] = item;
+        return setValue('beneficiaries', item.total_beneficiaries);
+      }, {});
+    }
+  }, [community, getValues, setValue]);
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
@@ -188,6 +204,7 @@ const CommunityEditForm = ({ community }: Props) => {
                 /> */}
 
                 <RHFTextField name="managers" label="Managers" onChange={handleChange} />
+                <RHFTextField name="beneficiaries" label="Beneficiaries" />
                 <RHFTextField
                   name="description"
                   label="Description"
