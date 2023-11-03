@@ -59,6 +59,8 @@ export type ICommunityTableFilterValue = {
   localCurrency: string;
   description: string;
   managers: String[];
+  summary: any[];
+  beneficiaries: number;
 };
 
 export type ICommunityTableAddValue = {
