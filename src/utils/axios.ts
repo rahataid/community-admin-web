@@ -79,6 +79,8 @@ export const endpoints = {
       `communities/${id}/upload-asset/${key}/multiple`,
     uploadAssets: (id: string, key: string) => `/communities/${id}/upload-asset/${key}`,
     getMultipleAsset: (address: string) => `/communities/${address}/images`,
+    rmvGalleryImageAssetFromCommunity: (address: string) =>
+      `/communities/${address}/images/gallery`,
   },
   category: {
     create: '/categories',
