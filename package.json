@@ -106,7 +106,8 @@
     "utf-8-validate": "^6.0.3",
     "yet-another-react-lightbox": "^3.11.1",
     "yup": "^1.2.0",
-    "zustand": "^4.3.9"
+    "zustand": "^4.3.9",
+    "husky": "^8.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.22.5",
@@ -141,7 +142,6 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "husky": "^8.0.3",
     "prettier": "^2.8.8",
     "typescript": "^5.1.3"
   }
