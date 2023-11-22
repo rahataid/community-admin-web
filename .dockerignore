@@ -1,0 +1,11 @@
+.github/
+.git/
+.next/
+.vscode
+.dockerignore
+.gitignore
+.eslintignore
+.eslintrc
+.prettierrc
+Dockerfile
+*.md
