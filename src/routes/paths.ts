@@ -45,6 +45,7 @@ export const paths = {
       category: {
         list: `${ROOTS.CATEGORY}`,
         add: `${ROOTS.CATEGORY}/add`,
+        edit: (id: string) => `${ROOTS.CATEGORY}/${id}/edit`,
       },
       manager: {
         list: `${ROOTS.MANAGER}`,
