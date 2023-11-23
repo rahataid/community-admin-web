@@ -151,3 +151,24 @@ export function useRemoveCommunity() {
     }
   );
 }
+
+export function useUpdateToRmvGalleryImages(address: string) {
+  const queryClient = useQueryClient();
+  const { enqueueSnackbar } = useSnackbar();
+  return useMutation(
+    ['community/update/gallery'],
+    async (fileName: string) => {
+      const res = await CommunityService.rmvGalleryImageAssetFromCommunity(address, fileName);
+      return res?.data;
+    },
+    {
+      onError: () => {
+        enqueueSnackbar('Error Removing Image', { variant: 'error' });
+      },
+      onSuccess: (data) => {
+        enqueueSnackbar('Sucessfully Remove Image', { variant: 'success' });
+        queryClient.invalidateQueries(['communities']);
+      },
+    }
+  );
+}

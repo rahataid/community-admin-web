@@ -13,6 +13,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { AWS_ROOT_FOLDER_NAME } from '@config';
 import { Alert, Grid } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
+import { useUpdateToRmvGalleryImages } from 'src/api/community';
 import { Upload } from 'src/components/upload';
 
 // ----------------------------------------------------------------------
@@ -35,6 +36,7 @@ export default function UploadImage({
   const preview = useBoolean();
   const [files, setFiles] = useState<(File | string)[]>([]);
   const [file, setFile] = useState<File | string | null>(null);
+  const { mutate } = useUpdateToRmvGalleryImages(community?.address);
   const handleDropSingleFile = useCallback((acceptedFiles: File[]) => {
     const newFile = acceptedFiles[0];
     if (newFile) {
@@ -61,7 +63,14 @@ export default function UploadImage({
   );
 
   const handleRemoveFile = (inputFile: File | string) => {
+    // Split the URL by '/'
     const filesFiltered = files.filter((fileFiltered) => fileFiltered !== inputFile);
+
+    if (typeof inputFile === 'string') {
+      const urlParts = inputFile.split('/');
+      const hash = urlParts[urlParts.length - 1];
+      mutate(hash);
+    }
     setFiles(filesFiltered);
   };
 

@@ -16,11 +16,11 @@ import { ICategoryItem } from 'src/types/community';
 
 type Props = {
   row: ICategoryItem;
-  onViewRow: VoidFunction;
+  onEdit: VoidFunction;
 };
 
-export default function CategoryTableRow({ row, onViewRow }: Props) {
-  const { name} = row;
+export default function CategoryTableRow({ row, onEdit }: Props) {
+  const { name } = row;
 
   const quickEdit = useBoolean();
 
@@ -30,10 +30,10 @@ export default function CategoryTableRow({ row, onViewRow }: Props) {
         <ListItemText primary={name} primaryTypographyProps={{ typography: 'body2' }} />
       </TableCell>
 
-      <TableCell align="center" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-        <Tooltip title="View Details" placement="top" arrow>
-          <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={() => onViewRow()}>
-            <Iconify color="#118D57" icon="iconamoon:eye-light" />
+      <TableCell sx={{ alignItems: 'center' }}>
+        <Tooltip title="Edit" placement="top" arrow>
+          <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={() => onEdit()}>
+            <Iconify color="#118D57" icon="iconamoon:edit-light" />
           </IconButton>
         </Tooltip>
       </TableCell>

@@ -23,7 +23,7 @@ export type ICategoryDetails = {
 };
 export type ICommunityItem = {
   id: number;
-  address?: string;
+  address: string;
   name: string;
   description: string;
   longitude: number;

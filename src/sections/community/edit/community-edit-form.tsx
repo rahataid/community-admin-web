@@ -90,7 +90,6 @@ const CommunityEditForm = ({ community }: Props) => {
 
   const { handleSubmit, setValue, getValues, watch } = methods;
   useEffect(() => {
-    console.log(community);
     if (community) {
       const defaultValuesKeys = Object.keys(defaultValues) as (keyof FormValues)[];
       const communityKeys = Object.keys(community) as (keyof FormValues)[];
