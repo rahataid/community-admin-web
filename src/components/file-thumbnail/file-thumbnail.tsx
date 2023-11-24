@@ -1,10 +1,10 @@
-import { Theme, SxProps } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
+import { SxProps, Theme } from '@mui/material/styles';
 //
-import { fileData, fileFormat, fileThumb } from './utils';
 import DownloadButton from './download-button';
+import { fileData, fileFormat, fileThumb } from './utils';
 
 // ----------------------------------------------------------------------
 
@@ -28,9 +28,8 @@ export default function FileThumbnail({
   const { name = '', path = '', preview = '' } = fileData(file);
 
   const format = fileFormat(path || preview);
-
   const renderContent =
-    format === 'image' && imageView ? (
+    format && imageView ? (
       <Box
         component="img"
         src={preview}

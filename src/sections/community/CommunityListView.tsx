@@ -32,7 +32,7 @@ import {
 } from 'src/components/table';
 // types
 //
-import { Button } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import { RouterLink } from '@routes/components';
 import { useSnackbar } from 'notistack';
 // import { useUsers } from 'src/api/administration';
@@ -75,6 +75,7 @@ export default function CommunitiesListView() {
   // const [viewCommunity, setViewCommunity] = useState<ICommunityItem>({});
   const searchParams = useSearchParams();
   const pathname = usePathname();
+  const [searchQuery, setSearchQuery] = useState('');
 
   const { push } = useRouter();
 
@@ -117,6 +118,11 @@ export default function CommunitiesListView() {
     setFilters(searchFilters);
   }, [searchParams, table.order, table.orderBy, table.page, table.rowsPerPage, defaultFilters]);
 
+  const filteredCommunities = communities?.filter((community) => {
+    const search = searchQuery.toLowerCase();
+    return community?.name?.toLowerCase().includes(search);
+  });
+
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <CustomBreadcrumbs
@@ -127,12 +133,21 @@ export default function CommunitiesListView() {
         }}
         action={
           <>
+            <TextField
+              name="searchQuery"
+              placeholder="Search communities..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              size="small"
+              variant="outlined"
+            />
             <Button
               component={RouterLink}
               href={paths.dashboard.general.community.add}
               variant="outlined"
               startIcon={<Iconify icon="mingcute:add-line" />}
               color="success"
+              sx={{ marginLeft: 2 }}
             >
               Add Community
             </Button>
@@ -149,16 +164,17 @@ export default function CommunitiesListView() {
           </>
         }
       />
+
       <Card>
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <TableSelectedAction
             dense={table.dense}
             numSelected={table.selected.length}
-            rowCount={communities.length}
+            rowCount={filteredCommunities?.length}
             onSelectAllRows={(checked) =>
               table.onSelectAllRows(
                 checked,
-                communities.map((row: ICommunityItem) => row.name.toString())
+                filteredCommunities?.map((row: ICommunityItem) => row.name.toString())
               )
             }
             action={
@@ -176,13 +192,13 @@ export default function CommunitiesListView() {
                 order={table.order}
                 orderBy={table.orderBy}
                 headLabel={TABLE_HEAD}
-                rowCount={communities.length}
+                rowCount={filteredCommunities?.length}
                 numSelected={table.selected.length}
                 onSort={table.onSort}
               />
 
               <TableBody>
-                {communities.map((row: ICommunityItem) => (
+                {filteredCommunities?.map((row: ICommunityItem) => (
                   <CommunityTableRow
                     key={row.id}
                     row={row}

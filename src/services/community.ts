@@ -22,6 +22,10 @@ const CommunityService = {
     axiosInstance.patch(endpoints.communitiy.editCommunity(address), { ...data }),
   deleteCommunity: (address: string) =>
     axiosInstance.delete(endpoints.communitiy.deleteCommunity(address)),
+  rmvGalleryImageAssetFromCommunity: (address: string, fileName: string) =>
+    axiosInstance.patch(endpoints.communitiy.rmvGalleryImageAssetFromCommunity(address), {
+      fileName,
+    }),
 };
 
 export default CommunityService;

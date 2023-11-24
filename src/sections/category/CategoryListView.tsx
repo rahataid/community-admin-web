@@ -21,12 +21,19 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 import { useSettingsContext } from 'src/components/settings';
-import { TableHeadCustom, TableNoData, TableSelectedAction, useTable } from 'src/components/table';
+import {
+  TableEmptyRows,
+  TableHeadCustom,
+  TableNoData,
+  TablePaginationCustom,
+  TableSelectedAction,
+  emptyRows,
+  useTable,
+} from 'src/components/table';
 // types
 //
 import { Button } from '@mui/material';
 import { RouterLink } from '@routes/components';
-// import { useUsers } from 'src/api/administration';
 import { useCategory } from 'src/api/category';
 import { ICategoryItem, ICommunityApiFilters } from 'src/types/community';
 import CAtegoryTableRow from './category-table-row';
@@ -43,7 +50,7 @@ const TABLE_HEAD = [
 
 export default function CategoriesListView() {
   const table = useTable();
-  const { categories } = useCategory();
+  const { categories, meta } = useCategory();
 
   const defaultFilters: ICommunityApiFilters = useMemo(
     () => ({
@@ -87,6 +94,13 @@ export default function CategoriesListView() {
     setFilters(searchFilters);
   }, [searchParams, table.order, table.orderBy, table.page, table.rowsPerPage, defaultFilters]);
 
+  const handleEditRow = useCallback(
+    (id: string) => {
+      push(paths.dashboard.general.category.edit(id));
+    },
+    [push]
+  );
+  console.log(categories);
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <CustomBreadcrumbs
@@ -145,13 +159,14 @@ export default function CategoriesListView() {
                     key={row.id}
                     row={row}
                     // onViewRow={() => handleViewRow(row)}
+                    onEdit={() => handleEditRow(String(row?.id))}
                   />
                 ))}
 
-                {/* <TableEmptyRows
+                <TableEmptyRows
                   height={denseHeight}
                   emptyRows={emptyRows(table?.page, table?.rowsPerPage, meta?.total || 0)}
-                /> */}
+                />
 
                 <TableNoData notFound={notFound} />
               </TableBody>
@@ -159,7 +174,7 @@ export default function CategoriesListView() {
           </Scrollbar>
         </TableContainer>
 
-        {/* <TablePaginationCustom
+        <TablePaginationCustom
           count={meta?.total || 0}
           page={table.page}
           rowsPerPage={table?.rowsPerPage}
@@ -168,7 +183,7 @@ export default function CategoriesListView() {
           //
           dense={table.dense}
           onChangeDense={table.onChangeDense}
-        /> */}
+        />
       </Card>
     </Container>
   );
