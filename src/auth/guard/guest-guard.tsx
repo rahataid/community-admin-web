@@ -19,7 +19,6 @@ export default function GuestGuard({ children }: Props) {
 
   const authenticated = useAuthStore((state) => state.isAuthenticated);
   const returnTo = searchParams.get('returnTo');
-
   // const { isActive } = useWeb3React();
 
   const check = useCallback(() => {
@@ -31,6 +30,5 @@ export default function GuestGuard({ children }: Props) {
   useEffect(() => {
     check();
   }, [check]);
-
   return <>{children}</>;
 }

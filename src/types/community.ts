@@ -147,6 +147,7 @@ export type ICommunityListHookReturn = {
   loading: boolean;
   error: any;
   meta: ICommunityListApiResponse['meta'];
+  totalBeneficiariesSum: number;
   // refetchUser: () => {};
 };
 

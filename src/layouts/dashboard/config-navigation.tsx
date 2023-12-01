@@ -15,6 +15,7 @@ const ICONS = {
   community: icon('fluent:people-community-24-filled'),
   category: icon('carbon:category'),
   manager: icon('ion:people-sharp'),
+  settings: icon('gala:settings'),
 };
 
 // ----------------------------------------------------------------------
@@ -42,17 +43,26 @@ export function useNavData() {
             show: true,
           },
           {
-            title: 'Category',
-            path: paths.dashboard.general.category.list,
-            icon: ICONS.category,
+            title: 'Settings',
+            path: '#',
+            icon: ICONS.settings,
             show: true,
+
+            children: [
+              {
+                title: 'Category',
+                path: paths.dashboard.general.category.list,
+                icon: ICONS.category,
+                show: true,
+              },
+              // {
+              //   title: 'Managers',
+              //   path: paths.dashboard.general.manager.list,
+              //   icon: ICONS.manager,
+              //   show: true,
+              // },
+            ],
           },
-          // {
-          //   title: 'Managers',
-          //   path: paths.dashboard.general.manager.list,
-          //   icon: ICONS.manager,
-          //   show: true,
-          // },
         ],
       },
 

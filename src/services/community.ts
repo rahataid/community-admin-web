@@ -10,6 +10,7 @@ export type UploadAssetParams = {
 
 const CommunityService = {
   list: (params?: ICommunityApiFilters) => axiosInstance.get(endpoints.communitiy.list, { params }),
+  geoLoc: () => axiosInstance.get(endpoints.communitiy.geoLoc),
   create: (data: ICommunityAddDetails) => axiosInstance.post(endpoints.communitiy.create, data),
   detail: (address: string) => axiosInstance.get(endpoints.communitiy.details(address)),
   updateMultipleAssets: (id: string, key: string, data: any) =>

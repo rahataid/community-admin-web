@@ -27,7 +27,6 @@ const CommunityAddForm: React.FC = () => {
   const removeCommunity = useRemoveCommunity();
   const [selectedAddress, setSelectedAddress] = useState('');
   const { push } = useRouter();
-
   const awsUploader = useAWSUploader();
 
   const handleMultipleAssetUpload = async (files: File[]) => {
@@ -41,9 +40,9 @@ const CommunityAddForm: React.FC = () => {
       walletAddress: address,
       data: formData,
     });
+
     console.log(result);
   };
-
   const handleCoverUpload = async (file: File) => {
     const formData = new FormData();
 
@@ -70,6 +69,25 @@ const CommunityAddForm: React.FC = () => {
     communityRemoveModal.onFalse();
   }, [communityRemoveModal, push, removeCommunity, selectedAddress]);
 
+  const handleToPreview = () => {
+    const dynamicWidthPercentage = '80%';
+    const dynamicHeightPercentage = '80%';
+
+    const screenWidth =
+      window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    const screenHeight =
+      window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+    const dynamicWidth = Math.round((screenWidth * parseInt(dynamicWidthPercentage, 10)) / 100);
+    const dynamicHeight = Math.round((screenHeight * parseInt(dynamicHeightPercentage, 10)) / 100);
+    console.log(dynamicWidth);
+    window.open(
+      `https://rahat.io/communities/${address}`,
+      'Preview',
+      `width=${dynamicWidth},height=${dynamicHeight},resizable=yes`
+    );
+  };
+
   return (
     <Stack>
       <ConfirmDialog
@@ -89,16 +107,32 @@ const CommunityAddForm: React.FC = () => {
           mb: { xs: 3, md: 5 },
         }}
         action={
-          <Tooltip title="Delete" placement="top" arrow>
-            <Button
-              variant="outlined"
-              endIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
-              color="error"
-              onClick={() => handleModalToDeleteRow(community?.address)}
-            >
-              Delete
-            </Button>
-          </Tooltip>
+          <>
+            <Tooltip title="Delete" placement="top" arrow>
+              <Button
+                variant="outlined"
+                endIcon={<Iconify icon="octicon:eye-24" />}
+                color="success"
+                onClick={handleToPreview}
+                sx={{
+                  m: 2,
+                }}
+              >
+                Preview
+              </Button>
+            </Tooltip>
+
+            <Tooltip title="Delete" placement="top" arrow>
+              <Button
+                variant="outlined"
+                endIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
+                color="error"
+                onClick={() => handleModalToDeleteRow(community?.address)}
+              >
+                Delete
+              </Button>
+            </Tooltip>
+          </>
         }
       />
 
@@ -107,7 +141,11 @@ const CommunityAddForm: React.FC = () => {
       <UploadImage
         handleUploadMultiple={handleMultipleAssetUpload}
         handleCoverUpload={handleCoverUpload}
-        isUploading={awsUploader.uploadFile.isLoading}
+        isUploading={
+          awsUploader.uploadFile.isLoading
+            ? awsUploader.uploadFile.isLoading
+            : awsUploader.uploadMultipleFile.isLoading
+        }
         error={awsUploader.uploadFile.error?.message}
         community={community}
       />

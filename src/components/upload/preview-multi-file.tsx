@@ -34,8 +34,8 @@ export default function MultiFilePreview({ thumbnail, files, onRemove, sx }: Upl
               justifyContent="center"
               sx={{
                 m: 0.5,
-                width: 80,
-                height: 80,
+                width: 200,
+                height: 180,
                 borderRadius: 1.25,
                 overflow: 'hidden',
                 position: 'relative',

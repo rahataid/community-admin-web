@@ -238,7 +238,7 @@ const CommunityEditForm = ({ community }: Props) => {
               </Box>
               {/* @ts-ignore */}
 
-              <MapView geoData={latLang} onDataChange={getUpdateLatLang} />
+              <MapView geoData={latLang} onDataChange={getUpdateLatLang} lap="communities" />
             </Card>
             <Stack alignItems="flex-end">
               <LoadingButton type="submit" variant="outlined" color="success" loading={isLoading}>
