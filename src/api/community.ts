@@ -12,6 +12,31 @@ import {
   ICommunityTableAddValue,
 } from 'src/types/community';
 
+const calculateTotalBeneficiaries = (communities) => {
+  let totalBeneficiariesSum = 0;
+
+  // Iterate through the main array
+  communities?.forEach((item) => {
+    // Check if the item has a "summary" property
+    if (item.summary && Array.isArray(item.summary)) {
+      // Iterate through the "summary" array and add up the "total_beneficiaries" values
+      item.summary.forEach((summaryItem) => {
+        const totalBeneficiaries = summaryItem.total_beneficiaries;
+        // Check if totalBeneficiaries is a number and not null or undefined
+        if (
+          typeof totalBeneficiaries === 'number' &&
+          totalBeneficiaries !== null &&
+          totalBeneficiaries !== undefined
+        ) {
+          totalBeneficiariesSum += totalBeneficiaries;
+        }
+      });
+    }
+  });
+
+  return totalBeneficiariesSum;
+};
+
 export function useCommunities(params?: ICommunityApiFilters): ICommunityListHookReturn {
   const { data, isLoading, error } = useQuery(['communities', params], async () => {
     const res = await CommunityService.list(params);
@@ -20,8 +45,13 @@ export function useCommunities(params?: ICommunityApiFilters): ICommunityListHoo
 
   const communities = useMemo(() => data?.data?.rows || [], [data?.data?.rows]);
   const meta = useMemo(() => data?.data?.meta || {}, [data?.data?.meta]);
+  const totalBeneficiariesSum = useMemo(
+    () => calculateTotalBeneficiaries(communities),
+    [communities]
+  );
 
   return {
+    totalBeneficiariesSum,
     communities,
     loading: isLoading,
     meta,
@@ -40,6 +70,16 @@ export function useCommunity(address: string) {
     community,
     loading: isLoading,
     error,
+  };
+}
+
+export function useGeoLocation() {
+  const { data } = useQuery(['communities/geoLoc'], async () => {
+    const res = await CommunityService.geoLoc();
+    return res?.data;
+  });
+  return {
+    geoData: data,
   };
 }
 

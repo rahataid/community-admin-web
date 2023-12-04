@@ -71,6 +71,7 @@ export const endpoints = {
   },
   communitiy: {
     list: '/communities',
+    geoLoc: '/communities/geoLocation',
     details: (address: string) => `/communities/${address}`,
     create: '/communities',
     editCommunity: (address: string) => `/communities/${address}/edit`,

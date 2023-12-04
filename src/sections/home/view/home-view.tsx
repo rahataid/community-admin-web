@@ -1,10 +1,10 @@
 'use client';
 
+import AuthModernLayout from '@layouts/auth/modern';
+import { JwtLoginView } from '@sections/auth/jwt';
 // @mui
 // layouts
 // components
-import DashboardLayout from '@layouts/dashboard/layout';
-import { CommunitiesListView } from '@sections/community';
 //
 
 // ----------------------------------------------------------------------
@@ -51,12 +51,14 @@ export default function HomeView() {
     //       bgcolor: 'background.default',
     //     }}
     //   >
-        
+
     //   </Box>
     // </MainLayout>
-    <DashboardLayout>
-
-      <CommunitiesListView />
-    </DashboardLayout>
+    // <DashboardLayout>
+    //   <CommunitiesListView />
+    // </DashboardLayout>
+    <AuthModernLayout>
+      <JwtLoginView />
+    </AuthModernLayout>
   );
 }

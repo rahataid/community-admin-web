@@ -44,6 +44,8 @@ export default function Bargraph({ title, subheader, chart, ...other }: Props) {
     options,
   } = chart;
 
+  console.log(chart);
+
   const popover = usePopover();
 
   const [seriesData, setSeriesData] = useState('2019');

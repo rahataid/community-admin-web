@@ -18,7 +18,7 @@ import MetaMaskCard, {
 import { hooks as metamaskHooks } from '@web3/connectors/metaMask';
 import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useLogin, useRequestOtp } from 'src/api/auths';
+import { useLogin, useRequestOtp, useTempLogin } from 'src/api/auths';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import { useRouter, useSearchParams } from 'src/routes/hook';
 import useAppStore from 'src/store/app';
@@ -33,6 +33,10 @@ type OtpFormValues = {
   otp: string;
 };
 
+type PassFormValues = {
+  password: string;
+};
+
 const LoginSchema = Yup.object().shape({
   email: Yup.string().required('Email is required').email('Email must be a valid email address'),
 });
@@ -41,12 +45,17 @@ const OtpSchema = Yup.object().shape({
   otp: Yup.string().required('OTP is required'),
 });
 
+const PassSchema = Yup.object().shape({
+  password: Yup.string().required('Password is required'),
+});
+
 export default function JwtLoginView() {
   const { connector } = useWeb3React();
   const isMetamaskActive = metamaskHooks.useIsActive();
   const account = metamaskHooks.useAccount();
   const login = useLogin();
   const requestOtp = useRequestOtp();
+  const tempLogin = useTempLogin();
 
   const { user, error, setUser } = useAuthStore((state) => ({
     loginWallet: state.loginWallet,
@@ -75,6 +84,10 @@ export default function JwtLoginView() {
     otp: '',
   };
 
+  const defaultPassValues: PassFormValues = {
+    password: '',
+  };
+
   const methods = useForm<LoginFormValues>({
     resolver: yupResolver(LoginSchema),
     defaultValues,
@@ -83,6 +96,10 @@ export default function JwtLoginView() {
   const otpMethods = useForm<OtpFormValues>({
     resolver: yupResolver(OtpSchema),
     defaultValues: defaultOtpValues,
+  });
+  const passmethods = useForm<PassFormValues>({
+    resolver: yupResolver(PassSchema),
+    defaultValues: defaultPassValues,
   });
 
   const {
@@ -96,6 +113,12 @@ export default function JwtLoginView() {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+
+  const {
+    reset: passwordReset,
+    handleSubmit: handlePassword,
+    formState: { isSubmitting: isPasswordSubmiiting },
+  } = passmethods;
 
   const onSubmit = handleSubmit(async (data) => {
     await requestOtp.mutateAsync(data);
@@ -139,6 +162,18 @@ export default function JwtLoginView() {
     },
     [isMetamaskActive, networkSettings]
   );
+
+  const OnPasswordSubmit = handlePassword(async (data: any) => {
+    tempLogin.mutate(data);
+  });
+
+  useEffect(() => {
+    if (tempLogin.isSuccess) {
+      setUser(tempLogin.data);
+      setUserLocal(tempLogin.data);
+      router.replace(paths.dashboard.root);
+    }
+  }, [router, setUser, tempLogin.data, tempLogin.isSuccess]);
 
   const renderHead = (
     <Stack spacing={2} sx={{ mb: 5 }}>
@@ -241,11 +276,32 @@ export default function JwtLoginView() {
       </Divider>
     </Stack>
   );
+  const passwordProtection = (
+    <FormProvider methods={passmethods} onSubmit={OnPasswordSubmit}>
+      <Stack spacing={2.5}>
+        {!!errorMsg && <Alert severity="error">{errorMsg}</Alert>}
+
+        <RHFTextField name="password" label="Password" />
+
+        <LoadingButton
+          fullWidth
+          color="inherit"
+          size="large"
+          type="submit"
+          variant="contained"
+          loading={tempLogin.isLoading}
+        >
+          Login
+        </LoadingButton>
+      </Stack>
+    </FormProvider>
+  );
   return (
     <>
       {renderHead}
-      {!loginEmail && renderEmailForm}
-      {loginEmail && renderOtpForm}
+      {/* {!loginEmail && renderEmailForm} */}
+      {/* {loginEmail && renderOtpForm} */}
+      {passwordProtection}
       {dividerView}
       {renderWalletLogin}
     </>

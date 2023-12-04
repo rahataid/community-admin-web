@@ -2,7 +2,7 @@ import AuthService from '@services/auths';
 import { setSession } from '@utils/session';
 import { clearToken, removeUser, removeWalletName, setToken } from '@utils/storage-available';
 import { AuthUserType } from 'src/auth/types';
-import { IUserRoles, Role } from 'src/types/user';
+import { IUserRoles } from 'src/types/user';
 import { create } from 'zustand';
 
 export type IApiResponseError = {
@@ -91,10 +91,10 @@ const useAuthStore = create<AuthStoreType>((set) => ({
       isAuthenticated: true,
       isInitialized: true,
       error: null,
-      role: {
-        isAdmin: user?.roles.includes(Role.ADMIN),
-        isUser: user?.roles.includes(Role.USER),
-      },
+      // role: {
+      //   isAdmin: user?.roles.includes(Role.ADMIN),
+      //   isUser: user?.roles.includes(Role.USER),
+      // },
     });
   },
 

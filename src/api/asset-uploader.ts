@@ -24,7 +24,6 @@ export const useAWSUploader = () => {
   const uploadMultipleFile = useMutation(
     ['asset-uploaders'],
     async ({ walletAddress, data, key }: { key: string; walletAddress: string; data: any }) => {
-      console.log(data);
       const res = await CommunityService.updateMultipleAssets(walletAddress, key, data);
       return res;
     },

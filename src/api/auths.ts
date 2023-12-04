@@ -46,3 +46,33 @@ export const useLogin = () => {
     }
   );
 };
+
+export const useTempLogin = () => {
+  const notify = useSnackbar();
+  return useMutation(
+    ['login/verify/temp'],
+    // eslint-disable-next-line consistent-return
+    async (data: any) => {
+      if (data.password === 'd252508769e2372ee91e0e4e684ca4e8') {
+        const value = {
+          email: 'admi@rumsan.net',
+          name: 'Admin1',
+        };
+        return value;
+      }
+      throw new Error('Invalid password');
+    },
+    {
+      onSuccess: (data) => {
+        notify.enqueueSnackbar('Login successful', { variant: 'success' });
+        return data;
+      },
+      onError: (error) => {
+        notify.enqueueSnackbar('Password Wrong', {
+          variant: 'error',
+        });
+        throw error;
+      },
+    }
+  );
+};

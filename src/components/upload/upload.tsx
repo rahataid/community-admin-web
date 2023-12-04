@@ -9,6 +9,7 @@ import { alpha } from '@mui/material/styles';
 // assets
 import { UploadIllustration } from 'src/assets/illustrations';
 //
+import LoadingButton from '@mui/lab/LoadingButton';
 import Iconify from '../iconify';
 //
 import RejectionFiles from './errors-rejection-files';
@@ -49,7 +50,7 @@ export default function Upload({
 
   const renderPlaceholder = (
     <Stack spacing={3} alignItems="center" justifyContent="center" flexWrap="wrap">
-      <UploadIllustration sx={{ width: 1, maxWidth: 200 }} />
+      <UploadIllustration sx={{ width: 1, maxWidth: 50 }} />
       <Stack spacing={1} sx={{ textAlign: 'center' }}>
         <Typography variant="h6">Drop or Select file</Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
@@ -124,15 +125,15 @@ export default function Upload({
         )}
 
         {onUpload && (
-          <Button
+          <LoadingButton
             size="small"
             variant="contained"
             onClick={onUpload}
-            disabled={disabled}
+            loading={disabled}
             startIcon={<Iconify icon="eva:cloud-upload-fill" />}
           >
             Upload
-          </Button>
+          </LoadingButton>
         )}
       </Stack>
     </>
