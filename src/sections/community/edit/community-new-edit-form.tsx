@@ -11,6 +11,7 @@ import { memo, useCallback, useState } from 'react';
 // components
 import { ConfirmDialog } from '@components/custom-dialog';
 import Iconify from '@components/iconify/iconify';
+import { AWS_ROOT_FOLDER_NAME } from '@config';
 import { useBoolean } from '@hooks/use-boolean';
 import { Button, Stack, Tooltip } from '@mui/material';
 import { paths } from '@routes/paths';
@@ -82,7 +83,9 @@ const CommunityAddForm: React.FC = () => {
     const dynamicHeight = Math.round((screenHeight * parseInt(dynamicHeightPercentage, 10)) / 100);
     console.log(dynamicWidth);
     window.open(
-      `https://rahat.io/communities/${address}`,
+      `https://${
+        AWS_ROOT_FOLDER_NAME === 'development' ? 'community-stage.rahat.io' : 'rahat.io'
+      }/communities/${address}`,
       'Preview',
       `width=${dynamicWidth},height=${dynamicHeight},resizable=yes`
     );
