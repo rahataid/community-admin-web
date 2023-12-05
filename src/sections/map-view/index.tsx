@@ -60,7 +60,6 @@ export default function MapView({ lap, geoData, onDataChange }: MapViewProps) {
   const handleChildData = (data: any) => {
     setDataFromChild(data);
   };
-  console.log(geoData);
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     lap === 'communities' && onDataChange(dataFromChild);

@@ -2,15 +2,11 @@ import { ApexOptions } from 'apexcharts';
 import { useCallback, useState } from 'react';
 // @mui
 import Box from '@mui/material/Box';
-import ButtonBase from '@mui/material/ButtonBase';
 import Card, { CardProps } from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import MenuItem from '@mui/material/MenuItem';
 import { useTheme } from '@mui/material/styles';
 // components
 import Chart, { useChart } from 'src/components/chart';
-import CustomPopover, { usePopover } from 'src/components/custom-popover';
-import Iconify from 'src/components/iconify';
+import { usePopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
 
@@ -44,7 +40,7 @@ export default function Bargraph({ title, subheader, chart, ...other }: Props) {
     options,
   } = chart;
 
-  console.log(chart);
+  console.log(series);
 
   const popover = usePopover();
 
@@ -76,9 +72,8 @@ export default function Bargraph({ title, subheader, chart, ...other }: Props) {
   );
 
   return (
-    <>
-      <Card {...other}>
-        <CardHeader
+    <Card {...other}>
+      {/* <CardHeader
           title={title}
           subheader={subheader}
           action={
@@ -102,28 +97,15 @@ export default function Bargraph({ title, subheader, chart, ...other }: Props) {
               />
             </ButtonBase>
           }
-        />
+        /> */}
 
-        {series.map((item) => (
-          <Box key={item.year} sx={{ mt: 3, mx: 3 }}>
-            {item.year === seriesData && (
-              <Chart dir="ltr" type="bar" series={item.data} options={chartOptions} height={364} />
-            )}
-          </Box>
-        ))}
-      </Card>
-
-      <CustomPopover open={popover.open} onClose={popover.onClose} sx={{ width: 140 }}>
-        {series.map((option) => (
-          <MenuItem
-            key={option.year}
-            selected={option.year === seriesData}
-            onClick={() => handleChangeSeries(option.year)}
-          >
-            {option.year}
-          </MenuItem>
-        ))}
-      </CustomPopover>
-    </>
+      {series.map((item) => (
+        <Box key={item.year} sx={{ mt: 3, mx: 3 }}>
+          {item.year === seriesData && (
+            <Chart dir="ltr" type="bar" series={item.data} options={chartOptions} height={364} />
+          )}
+        </Box>
+      ))}
+    </Card>
   );
 }

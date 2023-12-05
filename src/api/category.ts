@@ -22,6 +22,17 @@ export function useCategory(params?: ICategoryApiFilter) {
     meta,
   };
 }
+
+export function useListCommunityByCategory() {
+  const { data } = useQuery(['categories/community'], async () => {
+    const res = await CategoryService.countCommunity();
+    return res?.data;
+  });
+
+  return {
+    listCommunityByCategory: data,
+  };
+}
 export function useCategoryCreate() {
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
