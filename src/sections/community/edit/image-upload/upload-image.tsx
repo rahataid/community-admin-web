@@ -98,7 +98,6 @@ export default function UploadImage({
       ) || [];
     setFiles(galleryUrls);
   }, [community]);
-
   return (
     <Grid sx={{ my: 5 }}>
       <Stack spacing={5}>
@@ -133,6 +132,8 @@ export default function UploadImage({
               />
             }
           /> */}
+          <CardHeader title="Upload Gallery" />
+
           <CardContent>
             <Upload
               multiple
@@ -142,6 +143,7 @@ export default function UploadImage({
               onRemove={handleRemoveFile}
               onRemoveAll={handleRemoveAllFiles}
               onUpload={onUploadMultiple}
+              disabled={isUploading}
             />
           </CardContent>
         </Card>

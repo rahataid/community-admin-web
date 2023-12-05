@@ -16,6 +16,28 @@ import { clusterCountLayer, clusterLayer, unclusteredPointLayer } from './layers
 
 function MapClusters({ geoData, ...other }: { other: MapBoxProps; geoData: MapData }) {
   const mapRef = useRef<MapRef>(null);
+  // const data = {
+  //   type: 'FeatureCollection',
+  //   crs: {
+  //     type: 'name',
+  //     properties: {
+  //       name: 'urn:ogc:def:crs:OGC:1.3:CRS84',
+  //     },
+  //   },
+  //   features: geoData,
+  // };
+
+  const mapDatas = geoData?.map((item) => ({
+    type: 'Feature',
+    geometry: {
+      type: 'Point',
+      coordinates: [item?.latitude, item?.longitude],
+    },
+    properties: {
+      // cluster: true,
+      id: item.country,
+    },
+  }));
   const data = {
     type: 'FeatureCollection',
     crs: {
@@ -24,7 +46,7 @@ function MapClusters({ geoData, ...other }: { other: MapBoxProps; geoData: MapDa
         name: 'urn:ogc:def:crs:OGC:1.3:CRS84',
       },
     },
-    features: geoData,
+    features: mapDatas,
   };
 
   const onClick = (event: MapLayerMouseEvent) => {
