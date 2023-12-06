@@ -71,23 +71,11 @@ const CommunityAddForm: React.FC = () => {
   }, [communityRemoveModal, push, removeCommunity, selectedAddress]);
 
   const handleToPreview = () => {
-    const dynamicWidthPercentage = '80%';
-    const dynamicHeightPercentage = '80%';
-
-    const screenWidth =
-      window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    const screenHeight =
-      window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-
-    const dynamicWidth = Math.round((screenWidth * parseInt(dynamicWidthPercentage, 10)) / 100);
-    const dynamicHeight = Math.round((screenHeight * parseInt(dynamicHeightPercentage, 10)) / 100);
-    console.log(dynamicWidth);
     window.open(
       `https://${
         AWS_ROOT_FOLDER_NAME === 'development' ? 'community-stage.rahat.io' : 'rahat.io'
       }/communities/${address}`,
-      'Preview',
-      `width=${dynamicWidth},height=${dynamicHeight},resizable=yes`
+      '_blank'
     );
   };
 

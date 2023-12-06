@@ -87,6 +87,7 @@ export const endpoints = {
     create: '/categories',
     list: '/categories',
     edit: (id: string) => `/categories/${id}/edit`,
+    countCommunity: '/categories/count',
   },
   reports: {
     dashboard: {
